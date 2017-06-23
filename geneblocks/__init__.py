@@ -2,6 +2,6 @@
 
 # __all__ = []
 
-from .geneblocks import *
+from .geneblocks import BlocksFinder
 
 from .version import __version__

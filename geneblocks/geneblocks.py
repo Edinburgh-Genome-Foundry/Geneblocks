@@ -4,6 +4,7 @@ from collections import defaultdict, OrderedDict
 import tempfile
 import numpy as np
 import re
+from copy import deepcopy
 
 try:
     from dna_features_viewer import BiopythonTranslator
@@ -86,14 +87,18 @@ class BlocksFinder:
             profile.max()
             for profile in self.match_profiles.values()
         ])
+        self.original_match_profiles = deepcopy(self.match_profiles)
 
-    def print_match_profiles(self, axes=None, color='#8eb7f9'):
+    def plot_match_profiles(self, axes=None, color='#8eb7f9', original=True):
+        match_profiles = (self.original_match_profiles if original else
+                          self.match_profiles)
         if axes is None:
             fig, axes = plt.subplots(len(self.sequences), 1,
                                      figsize=(10, 2*len(self.sequences)),
                                      facecolor="white", sharex=True)
-        for ax, (seq, match_profile) in zip(axes, self.match_profiles.items()):
-            ax.fill_between(range(len(match_profile)), match_profile, c=color)
+        for ax, (seq, match_profile) in zip(axes, match_profiles.items()):
+            ax.fill_between(range(len(match_profile)), match_profile,
+                            facecolor=color)
             ax.set_ylabel(seq)
         return axes
 

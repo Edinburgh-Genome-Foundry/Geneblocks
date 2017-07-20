@@ -13,6 +13,9 @@ You can also install it directly from the Python Package Index with this command
 
     sudo pip geneblocks install
 
+You will need to install NCBI BLAST too:
+::
+    sudo apt-get install ncbi-blast+
 
 Licence
 --------

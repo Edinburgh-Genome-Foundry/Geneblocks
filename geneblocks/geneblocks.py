@@ -1,3 +1,4 @@
+"""Defines central class BlockFinder."""
 import subprocess
 import itertools
 from collections import defaultdict, OrderedDict
@@ -16,10 +17,14 @@ except:
 
 from .biotools import reverse_complement, sequence_to_record, annotate_record
 
-class BlocksFinder:
 
-    def __init__(self, sequences, factor="coverage", min_block_size=80):
-        self.factor = factor
+class BlocksFinder:
+    """BlocksFinder."""
+
+    def __init__(self, sequences, block_selection="most_coverage_first",
+                 min_block_size=80):
+        """Initialize, compute best blocks."""
+        self.block_selection = block_selection
         self.min_block_size = min_block_size
         if isinstance(sequences, (list, tuple)):
             if hasattr(sequences[0], 'seq'):
@@ -37,11 +42,10 @@ class BlocksFinder:
             for seq in self.sequences.values()
         ])
 
-        self.find_intermatches()
-        self.compute_match_profiles()
-        self.find_common_blocks()
+        self._find_intermatches()
+        self._find_common_blocks()
 
-    def find_intermatches(self):
+    def _find_intermatches(self):
         temp_fasta_path = tempfile.mktemp(".fa")
 
         with open(temp_fasta_path, "w+") as f:
@@ -75,64 +79,79 @@ class BlocksFinder:
             location = (subject, sstart, send)
             self.intermatches[query][(qstart, qend)].append(location)
 
-    def compute_match_profiles(self):
+    def _compute_intersections(self, matches_dict):
+        intersections = {}
+        matches_list = sorted(matches_dict.keys())
+        for i, match1 in enumerate(matches_list):
+            for match2 in matches_list[i + 1:]:
+                intersection = start, end = match2[0], min(
+                    match1[1], match2[1])
+                if end < start:
+                    break
+                elif ((end - start > self.min_block_size) and
+                      (intersection not in intersections)):
+                    intersections[intersection] = len([
+                        matching
+                        for (match_start, match_end) in matches_list
+                        for matching in matches_dict[(match_start, match_end)]
+                        if match_start <= start <= end <= match_end
+                    ])
+        return intersections
+
         self.match_profiles = OrderedDict([
             (name, np.zeros(len(sequence)))
             for name, sequence in self.sequences.items()
         ])
         for seqname, matches in self.intermatches.items():
             for (start, end), matchlist in matches.items():
-                self.match_profiles[seqname][start+1:end-1] += len(matchlist)
+                self.match_profiles[seqname][start +
+                                             1:end - 1] += len(matchlist)
         self.max_frequency = max([
             profile.max()
             for profile in self.match_profiles.values()
         ])
         self.original_match_profiles = deepcopy(self.match_profiles)
 
-    def plot_match_profiles(self, axes=None, color='#8eb7f9', original=True):
-        match_profiles = (self.original_match_profiles if original else
-                          self.match_profiles)
-        if axes is None:
-            fig, axes = plt.subplots(len(self.sequences), 1,
-                                     figsize=(10, 2*len(self.sequences)),
-                                     facecolor="white", sharex=True)
-        for ax, (seq, match_profile) in zip(axes, match_profiles.items()):
-            ax.fill_between(range(len(match_profile)), match_profile,
-                            facecolor=color)
-            ax.set_ylabel(seq)
-        return axes
+    def _best_intersection(self, intersections):
+        def intersection_score(intersection):
+            start, end = intersection
+            if self.block_selection == 'nost_coverage_first':
+                f = (end - start)
+            else:
+                f = 1
+            return f * intersections[intersection]
+        return max([(0, (None, None))] + [(intersection_score(intersection),
+                                           intersection)
+                                          for intersection in intersections])
 
+    @staticmethod
+    def _subtract_from_segment(segment, subtracted):
+        """Return the difference between ``segment`` and ``subtracted``."""
+        seg_start, seg_end = segment
+        sub_start, sub_end = subtracted
+        result = []
+        if sub_start > seg_start:
+            result.append((seg_start, min(sub_start, seg_end)))
+        if sub_end < seg_end:
+            result.append((max(seg_start, sub_end), seg_end))
+        return sorted(list(set(result)))
 
-    def find_most_common_block_in_profile(self, profile):
-        def block_score(block):
-            start, end = block
-            block_length = end - start
-            if block_length < self.min_block_size:
-                return 0
-            frequency = profile[int((start+end)/2)]
-            if frequency == 1:
-                return 0
-            factor = block_length if self.factor == "coverage" else 1
-            return factor * frequency
-
-        changes = np.diff(profile).nonzero()[0]
-        return max([
-            (block_score(block), block)
-            for block in zip(changes, changes[1:])
-        ])
-
-    def find_common_blocks(self):
-        self.common_blocks = []
+    def _find_common_blocks(self):
+        """Find the largest common blocks, iteratively."""
+        common_blocks = []
         best_score = 1
+        all_intersections = {
+            seqname: self._compute_intersections(self.intermatches[seqname])
+            for seqname in self.sequences
+        }
         while True:
-            global_best_block = max([
-                (self.find_most_common_block_in_profile(profile), seqname)
-                for seqname, profile in self.match_profiles.items()
+            global_best_intersection = max([
+                (self._best_intersection(all_intersections[seqname]), seqname)
+                for seqname in self.sequences
             ])
-            (best_score, (start, end)), seqname = global_best_block
+            (best_score, (start, end)), seqname = global_best_intersection
             if best_score == 0:
                 break
-            # print ("global_best_block", global_best_block)
             best_sequence = self.sequences[seqname][start: end]
             best_sequence_rev = reverse_complement(best_sequence)
             locations = []
@@ -141,11 +160,49 @@ class BlocksFinder:
                                         (best_sequence_rev, -1)]:
                     for match in re.finditer(bestseq, sequence):
                         start, end = match.start(), match.end()
-                        self.match_profiles[seqname][start: end] = 0
                         locations.append((seqname, (start, end, strand)))
-            self.common_blocks.append(locations)
+                        match_segment = tuple(sorted([start, end]))
+                        intersections = list(all_intersections[seqname].keys())
+                        for intersection in intersections:
+                            score = all_intersections[seqname].pop(
+                                intersection)
+                            for diff in self._subtract_from_segment(
+                                    intersection, match_segment):
+                                diff_start, diff_end = diff
+                                if diff_end - diff_start > self.min_block_size:
+                                    all_intersections[seqname][diff] = score
+            common_blocks.append((best_sequence, locations))
+
+        number_size = int(np.log10(len(common_blocks))) + 1
+        self.common_blocks = OrderedDict()
+        for i, (sequence, locations) in enumerate(common_blocks):
+            block_name = 'block_%s' % (str(i).zfill(number_size))
+            self.common_blocks[block_name] = {
+                'sequence': sequence,
+                'locations': locations
+            }
+
+    def common_blocks_to_csv(self, target_file=None):
+        csv_content = "\n".join(["block;size;locations;sequence"] + [
+            ";".join([
+                block_name,
+                str(len(data['sequence'])),
+                " ".join([
+                    '%s(%d, %d, %d)' % (cst, start, end, strand)
+                    for (cst, (start, end, strand)) in data['locations']
+                ]),
+                data['sequence']
+            ])
+            for block_name, data in self.common_blocks.items()
+        ])
+        if target_file:
+            with open(target_file, 'w+') as f:
+                f.write(csv_content)
+        else:
+            return csv_content
 
     def common_blocks_to_records(self, colors="auto"):
+        """Return a list of records for each of the selected common blocks."""
         records = OrderedDict([
             (seqname, sequence_to_record(seq))
             for seqname, seq in self.sequences.items()
@@ -153,8 +210,9 @@ class BlocksFinder:
         if colors == "auto":
             colors = itertools.cycle([cm.Paired(0.21 * i % 1.0)
                                       for i in range(30)])
-        for i, (blocks, color) in enumerate(zip(self.common_blocks, colors)):
-            for (seqname, location) in blocks:
+        blocks_and_colors = zip(self.common_blocks.items(), colors)
+        for i, ((name, data), color) in enumerate(blocks_and_colors):
+            for (seqname, location) in data['locations']:
                 annotate_record(records[seqname], location,
                                 feature_type='misc_feature',
                                 label="block_%d" % (i + 1), color=color)
@@ -162,6 +220,7 @@ class BlocksFinder:
 
     def plot_common_blocks(self, colors="auto", axes=None, figure_width=10,
                            ax_height=2):
+        """Plot the common blocks found on vertically stacked axes."""
         if not PLOTS_AVAILABLE:
             raise ImportError("Plotting requires Matplotlib and "
                               "DNA Features Viewer installed. See docs.")

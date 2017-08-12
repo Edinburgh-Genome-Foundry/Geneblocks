@@ -19,7 +19,24 @@ from .biotools import reverse_complement, sequence_to_record, annotate_record
 
 
 class BlocksFinder:
-    """BlocksFinder."""
+    """BlocksFinder.
+
+    Parameters
+    ----------
+
+    sequences
+      A dictionnary of the sequences to compare, of the form
+      {sequence_name: ATGC_sequence_string}
+
+    blocks_selection
+      Either 'most_coverage_first' or 'larger_first'. If 'larger_first', the
+      largest blocks (in number of nucleotides). If 'most_coverage_first',
+      we pick first the blocks whose size times number of occurences is larger
+
+    min_block_size
+      Blocks with a size below this threshold will be ignored and the blocks
+      search stops when all blocks are below this threshold.
+    """
 
     def __init__(self, sequences, block_selection="most_coverage_first",
                  min_block_size=80):
@@ -172,17 +189,28 @@ class BlocksFinder:
                                 if diff_end - diff_start > self.min_block_size:
                                     all_intersections[seqname][diff] = score
             common_blocks.append((best_sequence, locations))
-
-        number_size = int(np.log10(len(common_blocks))) + 1
         self.common_blocks = OrderedDict()
-        for i, (sequence, locations) in enumerate(common_blocks):
-            block_name = 'block_%s' % (str(i).zfill(number_size))
-            self.common_blocks[block_name] = {
-                'sequence': sequence,
-                'locations': locations
-            }
+        if len(common_blocks) > 0:
+            number_size = int(np.log10(len(common_blocks))) + 1
+
+            for i, (sequence, locations) in enumerate(common_blocks):
+                block_name = 'block_%s' % (str(i).zfill(number_size))
+                self.common_blocks[block_name] = {
+                    'sequence': sequence,
+                    'locations': locations
+                }
 
     def common_blocks_to_csv(self, target_file=None):
+        """Write the common blocks into a CSV file.
+
+        If a target CSV file is provided the result is written to that file.
+        Otherwise the result is returned as a string.
+
+
+        The columns of the CSV file are "block", "size", "locations", and
+        sequence.
+
+        """
         csv_content = "\n".join(["block;size;locations;sequence"] + [
             ";".join([
                 block_name,
@@ -201,8 +229,13 @@ class BlocksFinder:
         else:
             return csv_content
 
-    def common_blocks_to_records(self, colors="auto"):
-        """Return a list of records for each of the selected common blocks."""
+    def sequences_with_annotated_blocks(self, colors="auto"):
+        """Return a list of Biopython records representing the sequences
+        with annotations indicating the common blocks
+
+        Parameter ``colors`` is either a list of colors or "auto" for the
+        default.
+        """
         records = OrderedDict([
             (seqname, sequence_to_record(seq))
             for seqname, seq in self.sequences.items()
@@ -220,13 +253,31 @@ class BlocksFinder:
 
     def plot_common_blocks(self, colors="auto", axes=None, figure_width=10,
                            ax_height=2):
-        """Plot the common blocks found on vertically stacked axes."""
+        """Plot the common blocks found on vertically stacked axes.
+
+        The axes on which the plots are drawn are returned at the end.
+
+        Parameters
+        ----------
+
+        colors
+          Either a list of colors to use for blocks or "auto" for the default.
+
+        axes
+          A list of matplotlib axes on which to plot, or None for new axes
+
+        figure_width
+          Width of the final figure in inches
+
+        ax_eight
+          Height of each plot
+        """
         if not PLOTS_AVAILABLE:
             raise ImportError("Plotting requires Matplotlib and "
                               "DNA Features Viewer installed. See docs.")
 
         translator = BiopythonTranslator()
-        records = self.common_blocks_to_records(colors=colors)
+        records = self.sequences_with_annotated_blocks(colors=colors)
         if axes is None:
             fig, axes = plt.subplots(
                 len(self.sequences), 1, facecolor="white", sharex=True,

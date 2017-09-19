@@ -17,8 +17,6 @@ At the Edinburgh Genome Foundry, we use GeneBlocks to:
 Usage
 ------
 
-Assuming that
-
 .. code:: python
 
     from geneblocks import BlocksFinder

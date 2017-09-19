@@ -4,15 +4,16 @@ GeneBlocks
   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/GeneBlocks
   :alt: Travis CI build status
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/docs/_static/images/title.png
-   :alt: [logo]
+
+
+
+
+GeneBlocks is a Python library to find common blocks in several DNA fragments.
+
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/illustration.jpeg
+   :alt: [illustration]
    :align: center
    :width: 500px
-
-
-
-GeneBlocks (complete documentation `here <https://edinburgh-genome-foundry.github.io/GeneBlocks/>`_)
-is a Python library to find common blocks in several DNA fragments.
 
 At the Edinburgh Genome Foundry, we use GeneBlocks to:
 
@@ -23,6 +24,18 @@ At the Edinburgh Genome Foundry, we use GeneBlocks to:
 Usage
 ------
 
+Assuming that
+
+..code:: python
+
+    from geneblocks import BlocksFinder
+
+    # Input sequences are in a dictionnary as follows:
+    sequences = {'seq1': 'ATTTGCGT...', 'seq2': 'ATGCCCGCACG...', etc.}
+
+    blocks_finder = BlocksFinder(sequences)
+    axes = blocks_finder.plot_common_blocks()
+    axes[0].figure.savefig("basic_example.png", bbox_inches="tight")
 
 Installation
 -------------

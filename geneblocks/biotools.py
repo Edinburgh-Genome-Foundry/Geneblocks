@@ -56,10 +56,11 @@ def complement(sequence):
 def reverse_complement(sequence):
     return complement(sequence)[::-1]
 
-def sequence_to_record(sequence, features=()):
+def sequence_to_record(sequence, record_id=None, name='unnamed', features=()):
     if not BIOPYTHON_AVAILABLE:
         raise ImportError("Creating records requires Biopython installed.")
     return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()),
+                     name=name, id=record_id,
                      features=list(features))
 
 def annotate_record(seqrecord, location="full", feature_type="feature",

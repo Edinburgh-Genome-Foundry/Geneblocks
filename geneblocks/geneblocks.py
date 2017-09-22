@@ -45,12 +45,23 @@ class BlocksFinder:
         self.min_block_size = min_block_size
         if isinstance(sequences, (list, tuple)):
             if hasattr(sequences[0], 'seq'):
+                self.records = OrderedDict([
+                    (record.id, record)
+                    for record in sequences
+                ])
                 sequences = OrderedDict([
                     (record.id, str(record.seq).upper())
                     for record in sequences
                 ])
-
-            sequences = OrderedDict(sequences)
+            else:
+                sequences = OrderedDict(sequences)
+        elif hasattr(list(sequences.values())[0], 'seq'):
+            self.records = self.sequences
+        else:
+            self.records = OrderedDict([
+                (name, sequence_to_record(seq, name=name))
+                for name, seq in sequences.items()
+            ])
         if isinstance(sequences, dict):
             sequences = OrderedDict(sorted(sequences.items()))
         self.sequences = sequences
@@ -228,6 +239,21 @@ class BlocksFinder:
                 f.write(csv_content)
         else:
             return csv_content
+
+    def common_blocks_records(self, target_file=None):
+        """Return all common blocks as a list of Biopython records.
+        """
+        if self.records is None:
+            raise ValueError('')
+        records = []
+        for block_name, data in self.common_blocks.items():
+            cst, (start, end, strand) = data['locations'][0]
+            record = self.records[cst][start:end]
+            if strand == -1:
+                record = record.reverse_complement()
+            record.id = record.name = block_name
+            records.append(record)
+        return records
 
     def sequences_with_annotated_blocks(self, colors="auto"):
         """Return a list of Biopython records representing the sequences

@@ -72,6 +72,7 @@ class BlocksFinder:
 
         self._find_intermatches()
         self._find_common_blocks()
+        self._find_unique_blocks()
 
     def _find_intermatches(self):
         temp_fasta_path = tempfile.mktemp(".fa")
@@ -100,8 +101,8 @@ class BlocksFinder:
             for name, seq in self.sequences.items()
         }
         for query, qstart, qend, subject, sstart, send in parsing:
-            qstart, qend = int(qstart), int(qend)
-            sstart, send = int(sstart), int(send)
+            qstart, qend = int(qstart) - 1, int(qend)
+            sstart, send = int(sstart) - 1, int(send)
             if qend - qstart < self.min_block_size:
                 continue
             location = (subject, sstart, send)
@@ -143,7 +144,7 @@ class BlocksFinder:
     def _best_intersection(self, intersections):
         def intersection_score(intersection):
             start, end = intersection
-            if self.block_selection == 'nost_coverage_first':
+            if self.block_selection == 'most_coverage_first':
                 f = (end - start)
             else:
                 f = 1
@@ -211,6 +212,21 @@ class BlocksFinder:
                     'locations': locations
                 }
 
+    def _find_unique_blocks(self):
+        self.unique_blocks = OrderedDict()
+        for seqname, rec in self.sequences_with_annotated_blocks().items():
+            blocks_locations = [(0, 0)] + sorted([
+                (f.location.start, f.location.end)
+                for f in rec.features
+                if f.qualifiers.get('is_block', False)
+            ]) + [(len(rec), len(rec))]
+            self.unique_blocks[seqname] = [
+                (end1, start2)
+                for (_, end1), (start2, _) in zip(blocks_locations,
+                                                  blocks_locations[1:])
+                if (start2 - end1) > 1
+            ]
+
     def common_blocks_to_csv(self, target_file=None):
         """Write the common blocks into a CSV file.
 
@@ -255,6 +271,18 @@ class BlocksFinder:
             records.append(record)
         return records
 
+    def unique_blocks_records(self, target_file=None):
+        """Return all unique blocks as a list of Biopython records."""
+        if self.records is None:
+            raise ValueError('')
+        records = []
+        for seqname, locations in self.unique_blocks.items():
+            for i, (start, end) in enumerate(locations):
+                record = self.records[seqname][start:end]
+                record.id = "%s_%03d" % (seqname, i)
+                records.append(record)
+        return records
+
     def sequences_with_annotated_blocks(self, colors="auto"):
         """Return a list of Biopython records representing the sequences
         with annotations indicating the common blocks
@@ -263,7 +291,8 @@ class BlocksFinder:
         default.
         """
         records = OrderedDict([
-            (seqname, sequence_to_record(seq))
+            (seqname, sequence_to_record(seq, name=seqname,
+                                         record_id=seqname))
             for seqname, seq in self.sequences.items()
         ])
         if colors == "auto":
@@ -274,6 +303,7 @@ class BlocksFinder:
             for (seqname, location) in data['locations']:
                 annotate_record(records[seqname], location,
                                 feature_type='misc_feature',
+                                is_block=True,
                                 label="block_%d" % (i + 1), color=color)
         return records
 

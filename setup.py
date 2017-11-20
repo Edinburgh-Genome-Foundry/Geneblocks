@@ -5,11 +5,13 @@ from setuptools import setup, find_packages
 
 exec(open('geneblocks/version.py').read()) # loads __version__
 
-setup(name='geneblocks',
-      version=__version__,
-      author='Zulko',
+setup(
+    name='geneblocks',
+    version=__version__,
+    author='Zulko',
     description='',
     long_description=open('README.rst').read(),
     license='see LICENSE.txt',
     keywords="",
-    packages= find_packages(exclude='docs'))
+    packages=find_packages(exclude='docs'),
+    install_requires=['numpy', 'Biopython', 'dna_features_viewer'])

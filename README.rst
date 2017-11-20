@@ -1,7 +1,7 @@
 GeneBlocks
 =============
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
-   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/GeneBlocks
+   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks
    :alt: Travis CI build status
 
 GeneBlocks is a Python library to find common blocks in several DNA fragments.

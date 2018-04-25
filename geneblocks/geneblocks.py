@@ -55,8 +55,12 @@ class BlocksFinder:
                 ])
             else:
                 sequences = OrderedDict(sequences)
+                self.records = OrderedDict([
+                    (name, sequence_to_record(seq, name=name))
+                    for name, seq in sequences.items()
+                ])
         elif hasattr(list(sequences.values())[0], 'seq'):
-            self.records = self.sequences
+            self.records = sequences
         else:
             self.records = OrderedDict([
                 (name, sequence_to_record(seq, name=name))
@@ -87,6 +91,8 @@ class BlocksFinder:
             "-query", temp_fasta_path,
             "-subject", temp_fasta_path,
             "-perc_identity", '100',
+            "-dust", "no",
+            "-evalue", "100000000000",
             "-ungapped",
             "-outfmt", '6 qseqid qstart qend sseqid sstart send'],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -96,6 +102,7 @@ class BlocksFinder:
             line.split('\t')
             for line in result.decode('utf-8').splitlines()
         ]
+        print (len(parsing))
         self.intermatches = {
             name: defaultdict(lambda *a: [])
             for name, seq in self.sequences.items()
@@ -290,11 +297,12 @@ class BlocksFinder:
         Parameter ``colors`` is either a list of colors or "auto" for the
         default.
         """
-        records = OrderedDict([
-            (seqname, sequence_to_record(seq, name=seqname,
-                                         record_id=seqname))
-            for seqname, seq in self.sequences.items()
-        ])
+        # records = OrderedDict([
+        #     (seqname, sequence_to_record(seq, name=seqname,
+        #                                  record_id=seqname))
+        #     for seqname, seq in self.sequences.items()
+        # ])
+        records = deepcopy(self.records)
         if colors == "auto":
             colors = itertools.cycle([cm.Paired(0.21 * i % 1.0)
                                       for i in range(30)])
@@ -339,6 +347,8 @@ class BlocksFinder:
                 len(self.sequences), 1, facecolor="white", sharex=True,
                 figsize=(figure_width, ax_height * len(self.sequences)),
             )
+        else:
+            fig = axes[0].figure
         for (ax, (seqname, record)) in zip(axes, records.items()):
             gr_record = translator.translate_record(record)
             gr_record.plot(ax, x_lim=(0, self.max_sequence_length),

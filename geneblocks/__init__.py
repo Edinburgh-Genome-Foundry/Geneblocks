@@ -2,6 +2,8 @@
 
 # __all__ = []
 
-from .geneblocks import BlocksFinder
+from .CommonBlocks import CommonBlocks
+from .DiffBlocks import DiffBlocks, DiffRecordTranslator
+from .biotools import load_record
 
 from .version import __version__

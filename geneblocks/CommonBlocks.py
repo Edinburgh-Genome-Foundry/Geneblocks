@@ -17,9 +17,10 @@ except:
 
 from .biotools import reverse_complement, sequence_to_record, annotate_record
 
+# TODO: Simplify the code by using the new Location class in Location.py
 
-class BlocksFinder:
-    """BlocksFinder.
+class CommonBlocks:
+    """CommonBlocks.
 
     Parameters
     ----------
@@ -102,7 +103,6 @@ class BlocksFinder:
             line.split('\t')
             for line in result.decode('utf-8').splitlines()
         ]
-        print (len(parsing))
         self.intermatches = {
             name: defaultdict(lambda *a: [])
             for name, seq in self.sequences.items()
@@ -297,11 +297,6 @@ class BlocksFinder:
         Parameter ``colors`` is either a list of colors or "auto" for the
         default.
         """
-        # records = OrderedDict([
-        #     (seqname, sequence_to_record(seq, name=seqname,
-        #                                  record_id=seqname))
-        #     for seqname, seq in self.sequences.items()
-        # ])
         records = deepcopy(self.records)
         if colors == "auto":
             colors = itertools.cycle([cm.Paired(0.21 * i % 1.0)

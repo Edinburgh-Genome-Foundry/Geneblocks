@@ -4,7 +4,7 @@ GeneBlocks
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks
    :alt: Travis CI build status
 
-GeneBlocks is a Python library to find common blocks in several DNA fragments.
+GeneBlocks is a Python library to compare different DNA sequences. It can either find common blocks in a group of DNA sequences, or highlight the differences between two sequences.
 
 .. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/illustration.jpeg
    :alt: [illustration]
@@ -20,16 +20,45 @@ At the Edinburgh Genome Foundry, we use GeneBlocks to:
 Usage
 ------
 
+Finding common blocks in a set of sequences:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .. code:: python
 
-    from geneblocks import BlocksFinder
+    from geneblocks import CommonBlocks
 
     # Input sequences are in a dictionnary as follows:
-    sequences = {'seq1': 'ATTTGCGT...', 'seq2': 'ATGCCCGCACG...', etc.}
+    sequences = {'seq1': 'ATTTGCGT...', 'seq2': 'ATGCCCGCACG...', ...}
 
-    blocks_finder = BlocksFinder(sequences)
-    axes = blocks_finder.plot_common_blocks()
+    common_blocks = CommonBlocks(sequences)
+    axes = common_blocks.plot_common_blocks()
     axes[0].figure.savefig("basic_example.png", bbox_inches="tight")
+
+Result:
+
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/common_blocks.png
+   :alt: [illustration]
+   :align: center
+   :width: 700px
+
+Highlighting the differences between two sequences:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    seq_1 = load_record("sequence1.gb")
+    seq_2 = load_record("sequence2.gb")
+
+    diff_blocks = DiffBlocks.from_sequences(seq_1, seq_2)
+    ax1, ax2 = diff_blocks.plot(figure_width=8)
+    ax1.figure.savefig("diff_blocks.png")
+
+Result:
+
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/diff_blocks.png
+   :alt: [illustration]
+   :align: center
+   :width: 700px
 
 Installation
 -------------

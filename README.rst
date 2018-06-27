@@ -6,19 +6,12 @@ GeneBlocks
 
 GeneBlocks is a Python library to compare different DNA sequences. It can either find common blocks in a group of DNA sequences, or highlight the differences between two sequences.
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/illustration.jpeg
-   :alt: [illustration]
-   :align: center
-   :width: 500px
-
-At the Edinburgh Genome Foundry, we use GeneBlocks to:
-
-- Gain insight on the structure non-annotated sequences that we get from different sources.
-- Speed up sequence screening by avoiding to BLAST several times the same sequence
-- Plan the assembly of several sequences at once.
+At the Edinburgh Genome Foundry, we use GeneBlocks to optimize sequence assembly, explore sets of non-annotated sequences, or visualize the differences
+between different versions of a sequence.
 
 Usage
 ------
+
 
 Finding common blocks in a set of sequences:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,8 +24,16 @@ Finding common blocks in a set of sequences:
     sequences = {'seq1': 'ATTTGCGT...', 'seq2': 'ATGCCCGCACG...', ...}
 
     common_blocks = CommonBlocks(sequences)
+
+    # PLOT THE BLOCKS
     axes = common_blocks.plot_common_blocks()
     axes[0].figure.savefig("basic_example.png", bbox_inches="tight")
+
+    # GET ALL COMMON BLOCKS AS BIOPYTHON RECORDS
+    blocks_records = common_blocks.common_blocks_records()
+
+    # WRITE ALL COMMON BLOCKS INTO A CSV SPREADSHEET
+    common_blocks.common_blocks_to_csv(self, target_file=None)
 
 Result:
 
@@ -40,6 +41,7 @@ Result:
    :alt: [illustration]
    :align: center
    :width: 700px
+
 
 Highlighting the differences between two sequences:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -60,10 +62,11 @@ Result:
    :align: center
    :width: 700px
 
+
 Installation
 -------------
 
-Geneblocks requires NCBI BLAST+. On Ubuntu, install it with
+The CommonBlocks feature requires NCBI BLAST+. On Ubuntu, install it with
 .. code:: shell
     (sudo) apt-get install ncbi-blast+
 

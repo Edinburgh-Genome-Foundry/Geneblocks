@@ -4,6 +4,9 @@ GeneBlocks
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks
    :alt: Travis CI build status
 
+.. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/Geneblocks/badge.svg
+  :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/Geneblocks
+
 GeneBlocks is a Python library to compare different DNA sequences. It can either find common blocks in a group of DNA sequences, or highlight the differences between two sequences.
 
 At the Edinburgh Genome Foundry, we use GeneBlocks to optimize sequence assembly, explore sets of non-annotated sequences, or visualize the differences

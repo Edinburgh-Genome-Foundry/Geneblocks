@@ -6,7 +6,7 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install ncbi-blast+
 install:
-  - pip install pytest
+  - pip install coveralls pytest-cov pytest
   - pip install -e .
 # command to run tests
 script:

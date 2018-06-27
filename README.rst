@@ -67,6 +67,7 @@ Installation
 -------------
 
 The CommonBlocks feature requires NCBI BLAST+. On Ubuntu, install it with
+
 .. code:: shell
     (sudo) apt-get install ncbi-blast+
 

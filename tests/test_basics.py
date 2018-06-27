@@ -24,6 +24,14 @@ def test_CommonBlocks_basics(tmpdir):
     fig_path = os.path.join(str(tmpdir), "basic_example.png")
     axes[0].figure.savefig(fig_path, bbox_inches="tight")
 
+    # GET ALL COMMON BLOCKS AS BIOPYTHON RECORDS
+    blocks_records = common_blocks.common_blocks_records()
+    antiblock_records = common_blocks.unique_blocks_records()
+
+    # WRITE ALL COMMON BLOCKS INTO A CSV SPREADSHEET
+    csv_path = os.path.join(str(tmpdir), "basic_example.csv")
+    common_blocks.common_blocks_to_csv(target_file=csv_path)
+
 
 def test_DiffBlocks_basics(tmpdir):
     seq_1 = load_record(os.path.join("tests", "sequences", "sequence1.gb"))

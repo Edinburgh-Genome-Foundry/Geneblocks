@@ -134,20 +134,6 @@ class CommonBlocks:
                     ])
         return intersections
 
-        self.match_profiles = OrderedDict([
-            (name, np.zeros(len(sequence)))
-            for name, sequence in self.sequences.items()
-        ])
-        for seqname, matches in self.intermatches.items():
-            for (start, end), matchlist in matches.items():
-                self.match_profiles[seqname][start +
-                                             1:end - 1] += len(matchlist)
-        self.max_frequency = max([
-            profile.max()
-            for profile in self.match_profiles.values()
-        ])
-        self.original_match_profiles = deepcopy(self.match_profiles)
-
     def _best_intersection(self, intersections):
         def intersection_score(intersection):
             start, end = intersection
@@ -263,7 +249,7 @@ class CommonBlocks:
         else:
             return csv_content
 
-    def common_blocks_records(self, target_file=None):
+    def common_blocks_records(self):
         """Return all common blocks as a list of Biopython records.
         """
         if self.records is None:

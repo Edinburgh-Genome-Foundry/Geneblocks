@@ -36,7 +36,7 @@ Finding common blocks in a set of sequences:
     blocks_records = common_blocks.common_blocks_records()
 
     # WRITE ALL COMMON BLOCKS INTO A CSV SPREADSHEET
-    common_blocks.common_blocks_to_csv(self, target_file=None)
+    common_blocks.common_blocks_to_csv(target_file="blocks.csv")
 
 Result:
 

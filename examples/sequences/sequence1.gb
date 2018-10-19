@@ -1,6 +1,6 @@
-LOCUS       unnamed                 3404 bp    DNA              UNK 01-JAN-1980
+LOCUS       Seq1                    3404 bp    DNA              UNK 01-JAN-1980
 DEFINITION  seq1.
-ACCESSION   unnamed
+ACCESSION   Seq1
 VERSION     unnamed
 KEYWORDS    .
 SOURCE      .

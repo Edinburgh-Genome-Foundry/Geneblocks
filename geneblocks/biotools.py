@@ -41,9 +41,11 @@ def random_dna_sequence(length, probas=None, seed=None):
         sequence = np.random.choice(bases, length, p=probas)
     return "".join(sequence)
 
-def load_record(filename, linear=True, name="unnamed"):
+def load_record(filename, linear=True, name="unnamed", upperize=True):
     formt = "genbank" if filename.endswith(("gb", "gbk")) else "fasta"
     record = SeqIO.read(filename, formt)
+    if upperize:
+        record.seq = record.seq.upper()
     record.linear = linear
     record.id = name
     record.name = name.replace(" ", "_")[:20]

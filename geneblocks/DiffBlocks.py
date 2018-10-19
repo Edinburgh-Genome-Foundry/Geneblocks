@@ -81,6 +81,12 @@ class DiffRecordTranslator(BiopythonTranslator):
 
 
 class DiffBlocks:
+    """Class to generate and represent DiffBlocks.
+
+    Usage:
+
+    >>> DiffBlocks.from_sequences(s1, s2)
+    """
 
     def __init__(self, s1, s2, blocks):
         self.s1 = s1

@@ -337,3 +337,39 @@ class CommonBlocks:
             ax.set_title(seqname, loc="left", fontdict=dict(weight="bold"))
         fig.tight_layout()
         return axes
+    
+    def copy_features_between_common_blocks(self, inplace=False):
+
+        def extract_subrecord(record, location):
+            start, end, strand = location
+            record = record[start: end]
+            if strand == -1:
+                record = record.reverse_complement()
+            return record
+
+        def extract_features(record, offset, reverse=False):
+            if reverse:
+                record = record.reverse_complement()
+            new_features = [deepcopy(f) for f in record.features]
+            for f in new_features:
+                f.location += offset
+            return new_features
+        
+        if inplace:
+            records = self.records
+        else:
+            records = deepcopy(self.records)
+        for block, data in self.common_blocks.items():
+            locations = data['locations']
+            subrecords = {
+                rec_id: extract_subrecord(records[rec_id], location)
+                for rec_id, location in data['locations']
+            }
+            for l1, l2 in itertools.combinations(locations, 2):
+                for ((id1, loc1), (id2, loc2)) in ((l1, l2), (l2, l1)):
+                    start1, end1, strand1 = loc1
+                    start2, end2, strand2 = loc2
+                    records[id1].features += extract_features(
+                        subrecords[id2], offset=start1,
+                        reverse=(strand1 == -1))
+        return records

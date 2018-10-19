@@ -1,6 +1,6 @@
-LOCUS       unnamed                 3524 bp    DNA              UNK 01-JAN-1980
-DEFINITION  seq1.
-ACCESSION   unnamed
+LOCUS       Seq2                    3524 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq2.
+ACCESSION   Seq2
 VERSION     unnamed
 KEYWORDS    .
 SOURCE      .

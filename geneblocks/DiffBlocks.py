@@ -3,14 +3,9 @@ from difflib import SequenceMatcher
 
 from .Location import Location
 
-try:
-    from dna_features_viewer import BiopythonTranslator
-    import matplotlib.pyplot as plt
-    import matplotlib.cm as cm
-    PLOTS_AVAILABLE = True
-except:
-    BiopythonTranslator = object
-    PLOTS_AVAILABLE = False
+from dna_features_viewer import BiopythonTranslator
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 from .biotools import sequence_to_record
 
@@ -108,9 +103,6 @@ class DiffBlocks:
         return [block.to_feature() for block in self.blocks]
 
     def plot(self, translator_class='default', separate_axes=True,  **plot_kw):
-        if not PLOTS_AVAILABLE:
-            raise ImportError("Plotting requires Matplotlib and "
-                              "DNA Features Viewer installed. See docs.")
 
         if translator_class == 'default':
             translator_class = DiffRecordTranslator
@@ -144,7 +136,6 @@ class DiffBlocks:
             return (ax1, ax2)
 
         else:
-
             record.features += diff_features
             gr_record = translator.translate_record(record)
             ax, _ = gr_record.plot(**plot_kw)

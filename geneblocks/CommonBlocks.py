@@ -7,13 +7,10 @@ import numpy as np
 import re
 from copy import deepcopy
 
-try:
-    from dna_features_viewer import BiopythonTranslator
-    import matplotlib.pyplot as plt
-    import matplotlib.cm as cm
-    PLOTS_AVAILABLE = True
-except:
-    PLOTS_AVAILABLE = False
+
+from dna_features_viewer import BiopythonTranslator
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 from .biotools import reverse_complement, sequence_to_record, annotate_record
 
@@ -317,9 +314,6 @@ class CommonBlocks:
         ax_eight
           Height of each plot
         """
-        if not PLOTS_AVAILABLE:
-            raise ImportError("Plotting requires Matplotlib and "
-                              "DNA Features Viewer installed. See docs.")
 
         translator = BiopythonTranslator()
         records = self.sequences_with_annotated_blocks(colors=colors)

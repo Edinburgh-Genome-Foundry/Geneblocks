@@ -38,6 +38,8 @@ def test_DiffBlocks_basics(tmpdir):
     seq_2 = load_record(os.path.join("tests", "sequences", "sequence2.gb"))
 
     diff_blocks = DiffBlocks.from_sequences(seq_1, seq_2)
+    # next line is just to cover separate_axes=false
+    diff_blocks.plot(figure_width=8, separate_axes=False)
     ax1, ax2 = diff_blocks.plot(figure_width=8)
     fig_path = os.path.join(str(tmpdir), "diff_blocks.png")
     ax1.figure.savefig(fig_path, bbox_inches='tight')
@@ -51,3 +53,16 @@ def test_DiffBlocks_basics(tmpdir):
         "delete 2304-2404|2524-2524",
         "equal 2404-3404|2524-3524"
     ]
+
+def test_features_transfer():
+    seq_folder = os.path.join("tests", "sequences", 'features_transfer')
+    insert = load_record(os.path.join(seq_folder, 'insert.gb'), name='insert')
+    plasmid = load_record(os.path.join(seq_folder, 'plasmid_to_annotate.gb'),
+                          name='plasmid')
+    blocks = CommonBlocks([insert, plasmid])
+    records = blocks.copy_features_between_common_blocks(inplace=False)
+    assert (len(records['plasmid'].features) == 6)
+    assert (len(plasmid.features) == 2)
+    blocks.copy_features_between_common_blocks(inplace=True)
+    assert (len(plasmid.features) == 6)
+

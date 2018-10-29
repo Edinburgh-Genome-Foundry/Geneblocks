@@ -7,10 +7,14 @@ GeneBlocks
 .. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/Geneblocks/badge.svg
   :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/Geneblocks
 
-GeneBlocks is a Python library to compare different DNA sequences. It can either find common blocks in a group of DNA sequences, or highlight the differences between two sequences.
+GeneBlocks is a Python library to compare DNA sequences. It can be used to:
+
+- Find common blocks in a group of DNA sequences, to factorize them (e.g. only analyze or synthetize each common block once)
+- Highlight differences between sequences (insertions, deletions, mutations)
+- Transfer Genbank features from one record to another sharing similar subsequences.
 
 At the Edinburgh Genome Foundry, we use GeneBlocks to optimize sequence assembly, explore sets of non-annotated sequences, or visualize the differences
-between different versions of a sequence.
+between different versions of a sequence, and re-annotate records coming from third parties such as DNA manufacturers.
 
 Usage
 ------
@@ -45,6 +49,34 @@ Result:
    :align: center
    :width: 700px
 
+Transfering features between genbank records:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this snippet we assume that we have two genbank records:
+
+- A record of an annotated part, containing an expression module.
+- A record of a plasmid which contains the part but the part was not properly annotated
+
+We will use Geneblocks to automatically detect where the part is located in
+the plasmid and automatically copy the features from the part record to the
+plasmid record.
+
+.. code:: python
+
+    from geneblocks import CommonBlocks, load_record
+    part = load_record('part.gb', name='insert')
+    plasmid = load_record('part.gb', name='plasmid')
+    blocks = CommonBlocks([part, plasmid])
+    new_records = blocks.copy_features_between_common_blocks(inplace=False)
+    annotated_plasmid = new_records['plasmid'] # Biopython record with all features
+
+
+The resulting annotated plasmids has annotations from both the original plasmid and the annotated part:
+
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/features_transfer.png
+   :alt: [illustration]
+   :align: center
+   :width: 500px
 
 Highlighting the differences between two sequences:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

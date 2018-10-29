@@ -346,6 +346,8 @@ class CommonBlocks:
                 record = record.reverse_complement()
             new_features = [deepcopy(f) for f in record.features]
             for f in new_features:
+                f.qualifiers['original_record'] = record.id
+            for f in new_features:
                 f.location += offset
             return new_features
         

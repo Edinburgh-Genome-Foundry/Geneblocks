@@ -10,7 +10,7 @@ setup(
     version=__version__,
     author='Zulko',
     description='Library to compare DNA sequences (diff, common blocks, etc.)',
-    long_description=open('README.rst').read(),
+    long_description=open('pypi-readme.rst').read(),
     license='MIT',
     url='https://github.com/Edinburgh-Genome-Foundry/geneblocks',
     keywords="DNA blocks diff genbank synthetic-biology bioinformatics",

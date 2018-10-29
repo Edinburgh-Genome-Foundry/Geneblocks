@@ -1,5 +1,6 @@
 GeneBlocks
-=============
+===========
+
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks
    :alt: Travis CI build status
@@ -16,6 +17,14 @@ GeneBlocks is a Python library to compare DNA sequences. It can be used to:
 At the Edinburgh Genome Foundry, we use GeneBlocks to optimize sequence assembly, explore sets of non-annotated sequences, or visualize the differences
 between different versions of a sequence, and re-annotate records coming from third parties such as DNA manufacturers.
 
+Live demos
+----------
+
+`Find common sequence blocks <https://cuba.genomefoundry.org/find-common-blocks>`_
+
+`Plot sequence diffs <https://cuba.genomefoundry.org/compare-two-sequences>`_
+
+`Transfer Genbank features between records <https://cuba.genomefoundry.org/transfer-features>`_
 
 Installation
 -------------

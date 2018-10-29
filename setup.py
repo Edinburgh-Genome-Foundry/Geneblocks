@@ -9,9 +9,10 @@ setup(
     name='geneblocks',
     version=__version__,
     author='Zulko',
-    description='',
+    description='Library to compare DNA sequences (diff, common blocks, etc.)',
     long_description=open('README.rst').read(),
-    license='see LICENSE.txt',
-    keywords="",
+    license='MIT',
+    url='https://github.com/Edinburgh-Genome-Foundry/geneblocks',
+    keywords="DNA blocks diff genbank synthetic-biology bioinformatics",
     packages=find_packages(exclude='docs'),
     install_requires=['numpy', 'Biopython', 'dna_features_viewer'])

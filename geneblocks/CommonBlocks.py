@@ -24,7 +24,8 @@ class CommonBlocks:
 
     sequences
       A dictionnary of the sequences to compare, of the form
-      {sequence_name: ATGC_sequence_string}
+      {sequence_name: ATGC_sequence_string} or a list of records, all with
+      different IDs.
 
     blocks_selection
       Either 'most_coverage_first' or 'larger_first'. If 'larger_first', the
@@ -53,10 +54,13 @@ class CommonBlocks:
                 ])
             else:
                 sequences = OrderedDict(sequences)
-                self.records = OrderedDict([
-                    (name, sequence_to_record(seq, name=name))
-                    for name, seq in sequences.items()
-                ])
+                if isinstance(list(sequences.values())[0], str):
+                    self.records = OrderedDict([
+                        (name, sequence_to_record(seq, name=name))
+                        for name, seq in sequences.items()
+                    ])
+                else:
+                    self.records = sequences
         elif hasattr(list(sequences.values())[0], 'seq'):
             self.records = sequences
         else:

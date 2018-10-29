@@ -81,7 +81,7 @@ class CommonBlocks:
 
         with open(temp_fasta_path, "w+") as f:
             f.write("\n\n".join([
-                "> %s\n%s" % (name, seq)
+                "> %s\n%s" % (name, seq.upper())
                 for name, seq in self.sequences.items()
             ]))
         proc = subprocess.Popen([

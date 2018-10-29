@@ -16,6 +16,29 @@ GeneBlocks is a Python library to compare DNA sequences. It can be used to:
 At the Edinburgh Genome Foundry, we use GeneBlocks to optimize sequence assembly, explore sets of non-annotated sequences, or visualize the differences
 between different versions of a sequence, and re-annotate records coming from third parties such as DNA manufacturers.
 
+
+Installation
+-------------
+
+The CommonBlocks feature requires NCBI BLAST+. On Ubuntu, install it with
+
+.. code:: shell
+    (sudo) apt-get install ncbi-blast+
+
+
+You can install GeneBlocks through PIP
+
+.. code:: shell
+
+    sudo pip install geneblocks
+
+Alternatively, you can unzip the sources in a folder and type
+
+.. code:: shell
+
+    sudo python setup.py install
+
+
 Usage
 ------
 
@@ -44,10 +67,11 @@ Finding common blocks in a set of sequences:
 
 Result:
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/common_blocks.png
-   :alt: [illustration]
-   :align: center
-   :width: 700px
+
+.. raw:: html
+   
+   <img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/common_blocks.png'
+    width='600px'/>
 
 Transfering features between genbank records:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -73,10 +97,10 @@ plasmid record.
 
 The resulting annotated plasmids has annotations from both the original plasmid and the annotated part:
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/features_transfer.png
-   :alt: [illustration]
-   :align: center
-   :width: 500px
+.. raw:: html
+   
+   <img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/features_transfer.png'
+    width='600px'/>
 
 Highlighting the differences between two sequences:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,32 +116,10 @@ Highlighting the differences between two sequences:
 
 Result:
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/diff_blocks.png
-   :alt: [illustration]
-   :align: center
-   :width: 700px
-
-
-Installation
--------------
-
-The CommonBlocks feature requires NCBI BLAST+. On Ubuntu, install it with
-
-.. code:: shell
-    (sudo) apt-get install ncbi-blast+
-
-
-You can install GeneBlocks through PIP
-
-.. code:: shell
-
-    sudo pip install geneblocks
-
-Alternatively, you can unzip the sources in a folder and type
-
-.. code:: shell
-
-    sudo python setup.py install
+.. raw:: html
+   
+     <img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/diff_blocks.png'
+      width='700px'/>
 
 
 Licence

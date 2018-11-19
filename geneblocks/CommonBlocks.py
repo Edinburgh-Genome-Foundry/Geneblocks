@@ -63,6 +63,10 @@ class CommonBlocks:
                     self.records = sequences
         elif hasattr(list(sequences.values())[0], 'seq'):
             self.records = sequences
+            sequences = OrderedDict([
+                (record.id, str(record.seq).upper())
+                for record in sequences
+            ])
         else:
             self.records = OrderedDict([
                 (name, sequence_to_record(seq, name=name))

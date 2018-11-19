@@ -64,8 +64,8 @@ class CommonBlocks:
         elif hasattr(list(sequences.values())[0], 'seq'):
             self.records = sequences
             sequences = OrderedDict([
-                (record.id, str(record.seq).upper())
-                for record in sequences
+                (record_id, str(record.seq).upper())
+                for record_id, record in sequences.items()
             ])
         else:
             self.records = OrderedDict([

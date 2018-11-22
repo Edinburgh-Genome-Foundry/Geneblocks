@@ -122,9 +122,12 @@ class DiffBlocks:
             fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(width, 6))
             _, stats1 = gr_record.plot(ax=ax1, **plot_kw)
             _, stats2 = gr_diffrecord.plot(ax=ax2, with_ruler=False, **plot_kw)
-            max_level_1 = max([v['annotation_y'] for v in stats1[1].values()])
-            max_features_1 = max([v['feature_y'] for v in stats1[1].values()])
-            max_level_2 = max([v['annotation_y'] for v in stats2[1].values()])
+            max_level_1 = max([0] +[
+                v['annotation_y'] for v in stats1[1].values()])
+            max_features_1 = max([0] + [
+                v['feature_y'] for v in stats1[1].values()])
+            max_level_2 = max([0] + [
+                v['annotation_y'] for v in stats2[1].values()])
             n_levels = max_level_1 + max_level_2
             fig.set_size_inches((width, 0.6*n_levels))
             ax2.set_ylim(ymin=-0.5)

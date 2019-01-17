@@ -52,6 +52,26 @@ class DiffBlock:
 
     def __repr__(self):
         return str(self)
+    
+    def trim_replace_block(self):
+        s1 = self.s1_location.extract_sequence()
+        s2 = self.s2_location.extract_sequence()
+        for start in range(1, min(len(s1), len(s2))):
+            if s1[:start] != s2[:start]:
+                start = start - 1
+                break
+        for end in range(1, min(len(s1), len(s2))):
+            if s1[-end:] != s2[-end:]:
+                end = end - 1
+                break
+        if start > 0:
+            self.s1_location.start += start
+            self.s2_location.start += start
+        if end > 0:
+            self.s1_location.end -= end     
+            self.s2_location.end -= end
+        
+
 
 
 class DiffRecordTranslator(BiopythonTranslator):
@@ -89,7 +109,7 @@ class DiffBlocks:
         self.blocks = blocks
 
     @staticmethod
-    def from_sequences(s1, s2):
+    def from_sequences(s1, s2, contract_under=3):
         matcher = SequenceMatcher(a=s1.upper(), b=s2.upper(), autojunk=False)
         blocks = [
             DiffBlock(operation,
@@ -97,7 +117,11 @@ class DiffBlocks:
                       Location(s2s, s2e, sequence=s2))
             for operation, s1s, s1e, s2s, s2e in matcher.get_opcodes()
         ]
-        return DiffBlocks(s1, s2, blocks)
+        diffblocks = DiffBlocks(s1, s2, blocks)
+        if contract_under:
+            diffblocks.contract_subblocks_as_replace(
+                max_replace_size=contract_under)
+        return diffblocks
 
     def diffs_as_features(self):
         return [block.to_feature() for block in self.blocks]
@@ -143,3 +167,41 @@ class DiffBlocks:
             gr_record = translator.translate_record(record)
             ax, _ = gr_record.plot(**plot_kw)
             return ax
+    
+    def _reconstruct_sequences_from_subblocks(self, subblocks):
+        s1, s2 = "", ""
+        for block in subblocks:
+            if block.operation in ('equal', 'replace', 'delete'):
+                s1 = s1 + block.s1_location.extract_sequence()
+            if block.operation in ('equal', 'replace', 'insert'):
+                s2 = s2 + block.s2_location.extract_sequence()
+        return s1, s2
+    
+    def contract_subblocks_as_replace(self, max_replace_size=4):
+        
+        def contract_one_block_tuple(blocks, tuple_size):
+            for i in range(len(blocks) - tuple_size + 1):
+                subblocks = blocks[i: i + tuple_size]
+                s1_location = Location(
+                    min([b.s1_location.start for b in subblocks]),
+                    max([b.s1_location.end for b in subblocks]),
+                    sequence=self.s1)
+                s2_location = Location(
+                    min([b.s2_location.start for b in subblocks]),
+                    max([b.s2_location.end for b in subblocks]),
+                    sequence=self.s2)
+                if max(len(s1_location), len(s2_location)) <= max_replace_size:
+                    new_block = DiffBlock('replace', s1_location, s2_location)
+                    new_block.trim_replace_block()
+                    return blocks[:i] + [new_block] + blocks[i + tuple_size:]
+            return blocks
+
+        blocks = self.blocks
+        for tuple_size in (4, 3, 2):
+            while True:
+                new_blocks = contract_one_block_tuple(blocks, tuple_size)
+                if len(new_blocks) == len(blocks):
+                    break
+                blocks = new_blocks
+        self.blocks = blocks
+

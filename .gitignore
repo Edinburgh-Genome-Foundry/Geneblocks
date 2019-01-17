@@ -44,3 +44,4 @@ nosetests.xml
 .pypirc
 .cache
 .ipynb_checkpoints
+.vscode

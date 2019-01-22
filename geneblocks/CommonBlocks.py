@@ -38,10 +38,11 @@ class CommonBlocks:
     """
 
     def __init__(self, sequences, block_selection="most_coverage_first",
-                 min_block_size=80):
+                 ignore_self_homologies=False, min_block_size=80):
         """Initialize, compute best blocks."""
         self.block_selection = block_selection
         self.min_block_size = min_block_size
+        self.ignore_self_homologies = ignore_self_homologies
         if isinstance(sequences, (list, tuple)):
             if hasattr(sequences[0], 'seq'):
                 self.records = OrderedDict([
@@ -99,6 +100,7 @@ class CommonBlocks:
             "-perc_identity", '100',
             "-dust", "no",
             "-evalue", "100000000000",
+            "-culling_limit", "10",
             "-ungapped",
             "-outfmt", '6 qseqid qstart qend sseqid sstart send'],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -113,6 +115,9 @@ class CommonBlocks:
             for name, seq in self.sequences.items()
         }
         for query, qstart, qend, subject, sstart, send in parsing:
+            if (self.ignore_self_homologies and
+                ((query == subject) and qstart != sstart)):
+                continue
             qstart, qend = int(qstart) - 1, int(qend)
             sstart, send = int(sstart) - 1, int(send)
             if qend - qstart < self.min_block_size:
@@ -122,6 +127,9 @@ class CommonBlocks:
 
     def _compute_intersections(self, matches_dict):
         intersections = {}
+        if len(matches_dict) == 1:
+            intersection = list(matches_dict.keys())[0]
+            intersections[intersection] = 1
         matches_list = sorted(matches_dict.keys())
         for i, match1 in enumerate(matches_list):
             for match2 in matches_list[i + 1:]:
@@ -143,10 +151,10 @@ class CommonBlocks:
         def intersection_score(intersection):
             start, end = intersection
             if self.block_selection == 'most_coverage_first':
-                f = (end - start)
+                f = intersections[intersection]
             else:
                 f = 1
-            return f * intersections[intersection]
+            return f * (end - start)
         return max([(0, (None, None))] + [(intersection_score(intersection),
                                            intersection)
                                           for intersection in intersections])
@@ -199,12 +207,20 @@ class CommonBlocks:
                                 if diff_end - diff_start > self.min_block_size:
                                     all_intersections[seqname][diff] = score
             common_blocks.append((best_sequence, locations))
+
+        # trick to remove self-homologous sequences
+        common_blocks = [ 
+            (seq, locations)
+            for (seq, locations) in common_blocks
+            if len(locations) >= 2
+        ]
+                
         self.common_blocks = OrderedDict()
         if len(common_blocks) > 0:
             number_size = int(np.log10(len(common_blocks))) + 1
 
             for i, (sequence, locations) in enumerate(common_blocks):
-                block_name = 'block_%s' % (str(i).zfill(number_size))
+                block_name = 'block_%s' % (str(i + 1).zfill(number_size))
                 self.common_blocks[block_name] = {
                     'sequence': sequence,
                     'locations': locations
@@ -298,7 +314,7 @@ class CommonBlocks:
                 annotate_record(records[seqname], location,
                                 feature_type='misc_feature',
                                 is_block=True,
-                                label="block_%d" % (i + 1), color=color)
+                                label=name, color=color)
         return records
 
     def plot_common_blocks(self, colors="auto", axes=None, figure_width=10,

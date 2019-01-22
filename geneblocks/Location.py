@@ -39,6 +39,9 @@ class Location:
     def __len__(self):
         """Size of the location"""
         return abs(self.end - self.start)
+    
+    def to_tuple(self):
+        return self.start, self.end, self.strand
 
     def to_biopython_location(self):
         """Return a Biopython FeatureLocation equivalent to the location."""

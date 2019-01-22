@@ -1,14 +1,14 @@
 from copy import deepcopy
 from difflib import SequenceMatcher
 
-from .Location import Location
-
+import networkx as nx
 from dna_features_viewer import BiopythonTranslator
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
+from .Location import Location
 from .biotools import sequence_to_record
-
+from .CommonBlocks import CommonBlocks
 
 class DiffBlock:
     def __init__(self, operation, s1_location, s2_location):
@@ -39,6 +39,12 @@ class DiffBlock:
                     label = "%dn changed" % s1_length
                 else:
                     label = "%sn ➤ %sn change" % (s1_length, s2_length)
+        elif self.operation == 'reverse':
+            label = "was reversed at %d-%d" % (self.s1_location.start,
+                                               self.s1_location.end)
+        elif self.operation == 'transpose':
+            label = "was at %d-%d" % (self.s1_location.start,
+                                      self.s1_location.end)
         elif self.operation == "equal":
             label = "Equal"
 
@@ -56,6 +62,7 @@ class DiffBlock:
     def trim_replace_block(self):
         s1 = self.s1_location.extract_sequence()
         s2 = self.s2_location.extract_sequence()
+        start, end = 0, 0
         for start in range(1, min(len(s1), len(s2))):
             if s1[:start] != s2[:start]:
                 start = start - 1
@@ -70,8 +77,6 @@ class DiffBlock:
         if end > 0:
             self.s1_location.end -= end     
             self.s2_location.end -= end
-        
-
 
 
 class DiffRecordTranslator(BiopythonTranslator):
@@ -83,7 +88,10 @@ class DiffRecordTranslator(BiopythonTranslator):
         return dict(
             diff_delete='red',
             diff_insert='green',
-            diff_replace='orange'
+            diff_replace='orange',
+            diff_reverse='white',
+            diff_transpose='white',
+
         ).get(f.type, 'white')
 
     @staticmethod
@@ -109,8 +117,70 @@ class DiffBlocks:
         self.blocks = blocks
 
     @staticmethod
-    def from_sequences(s1, s2, contract_under=3):
+    def from_sequences(s1, s2, contract_under=3, blast_over=5000):
+        
+        # Simple case to eliminate the trivial case of equality
+        seq_s1 = str(s1.seq) if hasattr(s1, 'seq') else str(s1)
+        seq_s2 = str(s2.seq) if hasattr(s2, 'seq') else str(s2)
+        if seq_s1.upper() == seq_s2.upper():
+            return DiffBlocks(s1, s2, [])
+
+        if (blast_over is not None) and (len(s1) + len(s2)) > blast_over:
+            sequences = {'s1': s1, 's2': s2}
+            common_blocks = CommonBlocks(
+                sequences, ignore_self_homologies=True,
+                block_selection='larger_first'
+            ).common_blocks
+            blocks_in_seqs, remarks = get_optimal_common_blocks(common_blocks)
+            diffblocks = []
+            for b1, b2 in zip(blocks_in_seqs['s1'], blocks_in_seqs['s2']):
+                diffblocks.append(DiffBlock(
+                    'equal',
+                    s1_location=Location(*b1[:2], sequence=s1),
+                    s2_location=Location(*b2[:2], sequence=s2)
+                ))
+            for seq, blocks in blocks_in_seqs.items():
+                l = len(sequences[seq])
+                blocks_in_seqs[seq] = ([(0, 0, 'START')] +
+                                       blocks_in_seqs[seq] + [(l, l, 'END')])
+            
+            for i in range(len(blocks_in_seqs['s2']) - 1):
+                _, end1, _ = blocks_in_seqs['s1'][i]
+                next_start1, _, _ = blocks_in_seqs['s1'][i + 1]
+                _, end2, _ = blocks_in_seqs['s2'][i]
+                next_start2, _, _ = blocks_in_seqs['s2'][i + 1]
+                if next_start2 < end2:
+                    subdiffblocks = [DiffBlock(
+                        'delete',
+                        s1_location=Location(end1, next_start1, sequence=s1),
+                        s2_location=Location(next_start2, next_start2,
+                                             sequence=s2)
+                    )]
+                else:
+                    subsequence_1 = s1[end1: next_start1]
+                    subsequence_2 = s2[end2: next_start2]
+                    
+                    
+                    subdiffblocks = DiffBlocks.from_sequences(
+                        subsequence_1, subsequence_2,
+                        contract_under=contract_under, blast_over=None).blocks
+                    for block in subdiffblocks:
+                        block.s1_location.start += end1
+                        block.s1_location.end += end1
+                        block.s1_location.sequence = s1
+                        block.s2_location.start += end2
+                        block.s2_location.end += end2
+                        block.s2_location.sequence = s2
+                diffblocks += subdiffblocks
+            
+            sorted_blocks = sorted(diffblocks + remarks,
+                                   key=lambda b: b.s2_location.to_tuple())
+            return DiffBlocks(s1, s2, sorted_blocks)
+
         matcher = SequenceMatcher(a=s1.upper(), b=s2.upper(), autojunk=False)
+        if matcher.quick_ratio() < 1:
+            matcher = SequenceMatcher(a=s1.upper(), b=s2.upper(),
+                                      autojunk=True)
         blocks = [
             DiffBlock(operation,
                       Location(s1s, s1e, sequence=s1),
@@ -154,7 +224,7 @@ class DiffBlocks:
                 v['annotation_y'] for v in stats2[1].values()])
             n_levels = max_level_1 + max_level_2
             fig.set_size_inches((width, 0.6*n_levels))
-            ax2.set_ylim(ymin=-0.5)
+            ax2.set_ylim(bottom=-0.5)
             ax2.invert_yaxis()
             for f in gr_diffrecord.features:
                 ax1.fill_between([f.start, f.end], y1=max_features_1 + 1,
@@ -168,9 +238,11 @@ class DiffBlocks:
             ax, _ = gr_record.plot(**plot_kw)
             return ax
     
-    def _reconstruct_sequences_from_subblocks(self, subblocks):
+    @staticmethod
+    def reconstruct_sequences_from_blocks(blocks):
         s1, s2 = "", ""
-        for block in subblocks:
+        blocks = sorted(blocks, key=lambda b: b.s2_location.to_tuple())
+        for block in blocks:
             if block.operation in ('equal', 'replace', 'delete'):
                 s1 = s1 + block.s1_location.extract_sequence()
             if block.operation in ('equal', 'replace', 'insert'):
@@ -205,3 +277,137 @@ class DiffBlocks:
                 blocks = new_blocks
         self.blocks = blocks
 
+def get_optimal_common_blocks(common_blocks):
+    common_blocks = deepcopy(common_blocks)
+    remarks = []
+    
+    # Make so that there is never an anitsense block in s1 and a + block in s2.
+    # If it is so, flip the block in s2. It will become antisense and be later
+    # removed
+    for block_name, data in common_blocks.items():
+        locations = data['locations']
+        s1_strands = [strand for (s, (_, _, strand)) in locations if s == 's1']
+        if (1 not in s1_strands):
+            for i, location in enumerate(locations):
+                seq, (start, end, strand) = location
+                if seq == 's2':
+                    locations[i] = (seq, (start, end, -strand))
+    
+    # Remove every antisense blocks now. For the ones in s2, log this
+    # with a remark.
+    for block_name, data in common_blocks.items():
+        locations = data['locations']
+        for i, location in enumerate(locations):
+            (seq, (start, end, strand)) = location
+            if seq == 's2' and (strand == -1):
+                locations.remove(location)
+                _, (start1, end1, strand1) = locations[0]
+                remarks.append(DiffBlock(
+                    'reverse',
+                    s1_location = Location(start1, end1, strand1),
+                    s2_location=Location(start, end)
+                ))
+
+    # We start the structure that will be returned in the end
+    blocks_in_seqs = {
+        seq: sorted([
+            (start, end, bname)
+            for bname, data in common_blocks.items()
+            for (s, (start, end, strand)) in data['locations']
+            if s == seq
+        ])
+        for seq in ('s1', 's2')
+    }
+
+    # Identify blocks appearing only in one of the two sequences
+    blocks_in_s1 = set(b[-1] for b in blocks_in_seqs['s1'])
+    blocks_in_s2 = set(b[-1] for b in blocks_in_seqs['s2'])
+    uniblocks = (blocks_in_s1.union(blocks_in_s2)).difference(
+        blocks_in_s1.intersection(blocks_in_s2))
+
+    # Remove blocks appearing only in one of the two sequences
+    # as they are useless for sequences comparison
+    # this should be very rare but you never know.
+    for block_list in blocks_in_seqs.values():
+        for b in block_list:
+            if b[-1] in uniblocks:
+                block_list.remove(b)
+
+        for b1, b2 in zip(block_list, block_list[1:]):
+            start1, end1, name1 = b1
+            start2, end2, name2 = b2
+            if end2 <= end1:
+                block_list.remove(b2)
+    
+    # If a block appears several time in a sequence (self-homology)
+    # give unique names to each occurence: block_1, block_1*, etc.
+    blocks_in_seqs_dicts = dict(s1={}, s2={})
+    for seq, blocks_list in list(blocks_in_seqs.items()):
+        seen_blocks = set()
+        for i, (start, end, block_name) in enumerate(blocks_list):
+            while block_name in seen_blocks:
+                block_name = block_name + "*"
+            blocks_list[i] = start, end, block_name
+            blocks_in_seqs_dicts[seq][block_name] = dict(rank=i,
+                                                         location=(start, end))
+            seen_blocks.add(block_name)
+    
+
+    # Find and retain the largest sequence of blocks which is in the right order
+    # in both sequences. We will remove every other blocks
+    s1_dict = blocks_in_seqs_dicts['s1']
+    graph = nx.DiGraph([
+        (b1, b2)
+        for b1, data1 in blocks_in_seqs_dicts['s2'].items()
+        for b2, data2 in blocks_in_seqs_dicts['s2'].items()
+        if  (b2 in s1_dict) and (b1 in s1_dict)
+        and (s1_dict[b2]['rank'] > s1_dict[b1]['rank'])
+        and (data2['rank'] > data1['rank'])
+    ])
+    retained_blocks = nx.dag_longest_path(graph)
+
+    # remove any "misplaced" block that is not in the retained list.
+    # log a remark for the ones in s2.
+    for seq in ('s1', 's2'):
+        blocks_list = blocks_in_seqs[seq]
+        for block in list(blocks_list): # copy cause we will remove elements
+            start, end, block_name = block
+            if block_name not in retained_blocks:
+                blocks_list.remove(block)
+                if seq == 's2':
+                    s1_loc = blocks_in_seqs_dicts['s1'][block_name]['location']
+                    start1, end1 = s1_loc
+                    if (len(remarks) and
+                        (start == remarks[-1].s2_location.end) and
+                        (start1 == remarks[-1].s1_location.end)):
+                        remarks[-1].s1_location.end = end1
+                        remarks[-1].s2_location.end = end
+                    else:
+                        remarks.append(DiffBlock(
+                            'transpose',
+                            s1_location = Location(start1, end1),
+                            s2_location=Location(start, end)
+                        ))
+
+    # Reduce blocks when there is overlap
+    blocks_to_reduce = {}
+    for seq in ('s1', 's2'):
+        blocks_list = blocks_in_seqs[seq]
+        for b1, b2 in zip(blocks_list, blocks_list[1:]):
+            start1, end1, block_name1 = b1
+            start2, end2, block_name2 = b2
+            diff = end1 - start2 
+            if diff > 0:
+                if block_name1 not in blocks_to_reduce:
+                    blocks_to_reduce[block_name1] = 0
+                blocks_to_reduce[block_name1] = max(
+                    blocks_to_reduce[block_name1], diff)
+    
+    for seq in ('s1', 's2'):
+        blocks_list = blocks_in_seqs[seq]
+        for i, (start, end, block_name) in enumerate(blocks_list):
+            if block_name in blocks_to_reduce:
+                diff = blocks_to_reduce[block_name]
+                blocks_list[i] = (start, end - diff, block_name)
+    
+    return blocks_in_seqs, remarks

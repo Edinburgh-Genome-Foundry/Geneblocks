@@ -332,12 +332,12 @@ class DiffBlocks:
                     sequence=self.s2)
                 if max(len(s1_location), len(s2_location)) <= max_replace_size:
                     new_block = DiffBlock('replace', s1_location, s2_location)
-                    left_block, right_block = new_block.trim_replace_block()
+                    # left_block, right_block = new_block.trim_replace_block()
                     return (
                         blocks[:i] +
-                        ([] if left_block is None else [left_block]) +
+                        # ([] if left_block is None else [left_block]) +
                         [new_block] +
-                        ([] if right_block is None else [right_block]) +
+                        # ([] if right_block is None else [right_block]) +
                         blocks[i + tuple_size:]
                     )
             return blocks

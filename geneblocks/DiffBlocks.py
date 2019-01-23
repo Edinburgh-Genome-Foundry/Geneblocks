@@ -72,11 +72,34 @@ class DiffBlock:
                 end = end - 1
                 break
         if start > 0:
+            left_block = DiffBlock(
+                operation='equal',
+                s1_location = Location(self.s1_location.start,
+                                       self.s1_location.start + start,
+                                       sequence=self.s1_location.sequence),
+                s2_location = Location(self.s2_location.start,
+                                       self.s2_location.start + start,
+                                       sequence=self.s2_location.sequence)
+            )
             self.s1_location.start += start
             self.s2_location.start += start
+        else:
+            left_block = None
         if end > 0:
+            right_block = DiffBlock(
+                operation='equal',
+                s1_location = Location(self.s1_location.end - end,
+                                       self.s1_location.end,
+                                       sequence=self.s1_location.sequence),
+                s2_location = Location(self.s2_location.end - end,
+                                       self.s2_location.end,
+                                       sequence=self.s2_location.sequence)
+            )
             self.s1_location.end -= end     
             self.s2_location.end -= end
+        else:
+            right_block = None
+        return left_block, right_block
 
 
 class DiffRecordTranslator(BiopythonTranslator):
@@ -191,7 +214,46 @@ class DiffBlocks:
         if contract_under:
             diffblocks.contract_subblocks_as_replace(
                 max_replace_size=contract_under)
+        diffblocks.trim_all_replace_blocks()
         return diffblocks
+
+    def trim_all_replace_blocks(self):
+        for block in list(self.blocks):
+            if block.operation == 'replace':
+                left, right = block.trim_replace_block()
+                if left is not None:
+                    self.blocks.append(left)
+                if right is not None:
+                    self.blocks.append(right)
+        self.sort_blocks()
+        self.merge_successive_equal_blocks()
+    
+    def sort_blocks(self):
+        self.blocks = sorted(self.blocks,
+                             key=lambda b: b.s2_location.to_tuple())
+    
+    def merge_successive_equal_blocks(self):
+        
+        def contract_two_blocks(blocks):
+            blocks = list(blocks)
+            for i in range(len(blocks) - 1):
+                b1, b2 = blocks[i], blocks[i + 1]
+                if (b1.operation == 'equal') and (b2.operation == 'equal'):
+                    b1.s1_location.end = b2.s1_location.end
+                    b1.s2_location.end = b2.s2_location.end
+                    blocks.remove(b2)
+                    return blocks
+            return blocks
+        self.sort_blocks()
+        blocks = self.blocks
+        while True:
+            new_blocks = contract_two_blocks(blocks)
+            if len(new_blocks) == len(blocks):
+                break
+            blocks = new_blocks
+        self.blocks = blocks
+        
+                    
 
     def diffs_as_features(self):
         return [block.to_feature() for block in self.blocks]
@@ -252,8 +314,14 @@ class DiffBlocks:
     def contract_subblocks_as_replace(self, max_replace_size=4):
         
         def contract_one_block_tuple(blocks, tuple_size):
-            for i in range(len(blocks) - tuple_size + 1):
+            for i in range(len(blocks) - tuple_size):
                 subblocks = blocks[i: i + tuple_size]
+                if subblocks[-1].operation == 'equal':
+                    subblocks = subblocks[:-1]
+                if subblocks[0].operation == 'equal':
+                    subblocks = subblocks[1:]
+                if len(subblocks) < 2:
+                    continue
                 s1_location = Location(
                     min([b.s1_location.start for b in subblocks]),
                     max([b.s1_location.end for b in subblocks]),
@@ -264,8 +332,14 @@ class DiffBlocks:
                     sequence=self.s2)
                 if max(len(s1_location), len(s2_location)) <= max_replace_size:
                     new_block = DiffBlock('replace', s1_location, s2_location)
-                    new_block.trim_replace_block()
-                    return blocks[:i] + [new_block] + blocks[i + tuple_size:]
+                    left_block, right_block = new_block.trim_replace_block()
+                    return (
+                        blocks[:i] +
+                        ([] if left_block is None else [left_block]) +
+                        [new_block] +
+                        ([] if right_block is None else [right_block]) +
+                        blocks[i + tuple_size:]
+                    )
             return blocks
 
         blocks = self.blocks
@@ -275,6 +349,7 @@ class DiffBlocks:
                 if len(new_blocks) == len(blocks):
                     break
                 blocks = new_blocks
+        
         self.blocks = blocks
 
 def get_optimal_common_blocks(common_blocks):
@@ -355,16 +430,20 @@ def get_optimal_common_blocks(common_blocks):
 
     # Find and retain the largest sequence of blocks which is in the right order
     # in both sequences. We will remove every other blocks
-    s1_dict = blocks_in_seqs_dicts['s1']
-    graph = nx.DiGraph([
-        (b1, b2)
-        for b1, data1 in blocks_in_seqs_dicts['s2'].items()
-        for b2, data2 in blocks_in_seqs_dicts['s2'].items()
-        if  (b2 in s1_dict) and (b1 in s1_dict)
-        and (s1_dict[b2]['rank'] > s1_dict[b1]['rank'])
-        and (data2['rank'] > data1['rank'])
-    ])
-    retained_blocks = nx.dag_longest_path(graph)
+    
+    if len(blocks_in_seqs_dicts['s2']) < 2:
+        retained_blocks = list(blocks_in_seqs_dicts['s2'])
+    else:
+        s1_dict = blocks_in_seqs_dicts['s1']
+        graph = nx.DiGraph([
+            (b1, b2)
+            for b1, data1 in blocks_in_seqs_dicts['s2'].items()
+            for b2, data2 in blocks_in_seqs_dicts['s2'].items()
+            if  (b2 in s1_dict) and (b1 in s1_dict)
+            and (s1_dict[b2]['rank'] > s1_dict[b1]['rank'])
+            and (data2['rank'] > data1['rank'])
+        ])
+        retained_blocks = nx.dag_longest_path(graph)
 
     # remove any "misplaced" block that is not in the retained list.
     # log a remark for the ones in s2.

@@ -4,6 +4,8 @@ matplotlib.use('Agg')
 
 from geneblocks import CommonBlocks, DiffBlocks, load_record
 from geneblocks.biotools import reverse_complement, random_dna_sequence
+from geneblocks.DiffBlocks import DiffBlock
+from geneblocks.Location import Location
 
 def test_CommonBlocks_basics(tmpdir):
     C1, A, B, C2, C3, D, E, F = [
@@ -53,6 +55,31 @@ def test_DiffBlocks_basics(tmpdir):
         "delete 2304-2404|2524-2524",
         "equal 2404-3404|2524-3524"
     ]
+
+def test_diffblocks_trim_replace():
+    seq1 = "AAAATTTTAAAATTTTAAAATTTT"
+    seq2 = "AAAATTTTGGGGGGTTAAAATTTT"
+
+    diff = DiffBlocks(seq1, seq2, [
+        DiffBlock('equal',
+                s1_location=Location(0, 5, sequence=seq1),
+                s2_location=Location(0, 5, sequence=seq2)),
+        DiffBlock('replace',
+                s1_location=Location(5, 20, sequence=seq1),
+                s2_location=Location(5, 20, sequence=seq2)),
+        DiffBlock('equal',
+                s1_location=Location(20, 24, sequence=seq1),
+                s2_location=Location(20, 24, sequence=seq2))
+    ])
+    diff.trim_all_replace_blocks()
+    assert len(diff.blocks) == 3
+    b1, b2, b3 = diff.blocks
+    assert (b1.operation == 'equal') and (b1.s1_location.to_tuple() == (0, 8, None))
+    assert (b2.operation == 'replace') and (b2.s1_location.to_tuple() == (8, 14, None))
+    assert (b3.operation == 'equal') and (b3.s1_location.to_tuple() == (14, 24, None))
+    new_s1, new_s2 = diff.reconstruct_sequences_from_blocks([b1, b2, b3])
+    assert new_s1 == seq1
+    assert new_s2 == seq2
 
 def test_features_transfer():
     seq_folder = os.path.join("tests", "sequences", 'features_transfer')

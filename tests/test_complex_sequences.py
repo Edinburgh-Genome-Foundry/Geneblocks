@@ -28,3 +28,7 @@ def test_complex_sequences():
     assert end - start == 2000
     assert sorted([b[6].operation, b[7].operation]) == ['replace', 'transpose']
     assert sorted([b[-1].operation, b[-2].operation]) == ['replace', 'reverse']
+
+    s1, s2 = diff_blocks.reconstruct_sequences_from_blocks(diff_blocks.blocks)
+    assert s1 == seq1
+    assert s2 == seq2

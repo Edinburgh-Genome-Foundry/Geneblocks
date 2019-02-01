@@ -103,3 +103,23 @@ def annotate_record(seqrecord, location="full", feature_type="feature",
             type=feature_type
         )
     )
+
+def sequences_differences_array(seq1, seq2):
+    """Return an array [0, 0, 1, 0, ...] with 1s for sequence differences.
+
+    seq1, seq2 should both be ATGC strings.
+    """
+    if len(seq1) != len(seq2):
+        raise ValueError("Only use on same-size sequences (%d, %d)" %
+                         (len(seq1), len(seq2)))
+    arr1 = np.fromstring(seq1, dtype="uint8")
+    arr2 = np.fromstring(seq2, dtype="uint8")
+    return arr1 != arr2
+
+
+def sequences_differences(seq1, seq2):
+    """Return the number of nucleotides that differ in the two sequences.
+
+    seq1, seq2 should be strings of DNA sequences e.g. "ATGCTGTGC"
+    """
+    return sequences_differences_array(seq1, seq2).sum()

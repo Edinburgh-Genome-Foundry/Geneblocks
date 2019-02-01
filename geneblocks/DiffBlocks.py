@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 from .Location import Location
-from .biotools import sequence_to_record
+from .biotools import sequence_to_record, sequences_differences
 from .CommonBlocks import CommonBlocks
 
 class DiffBlock:
@@ -36,7 +36,10 @@ class DiffBlock:
                                      self.s2_location.extract_sequence())
             else:
                 if s1_length == s2_length:
-                    label = "%dn changed" % s1_length
+                    sub_s1 = self.s1_location.extract_sequence()
+                    sub_s2 = self.s2_location.extract_sequence()
+                    diffs = sequences_differences(sub_s1, sub_s2)
+                    label = "%d/%dn changed" % (diffs, s1_length)
                 else:
                     label = "%sn ➤ %sn change" % (s1_length, s2_length)
         elif self.operation == 'reverse':
@@ -263,14 +266,13 @@ class DiffBlocks:
         if translator_class == 'default':
             translator_class = DiffRecordTranslator
         translator = translator_class()
-
         record = deepcopy(self.s2)
         if not hasattr(record, 'features'):
             record = sequence_to_record(record)
 
         diff_features = self.diffs_as_features()
 
-        if separate_axes and len(record.features):
+        if separate_axes:
             gr_record = translator.translate_record(record)
             record.features = diff_features
             gr_diffrecord = translator.translate_record(record)

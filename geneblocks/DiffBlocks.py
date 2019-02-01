@@ -277,7 +277,11 @@ class DiffBlocks:
             record.features = diff_features
             gr_diffrecord = translator.translate_record(record)
             width = plot_kw.get('figure_width', 8)
-            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(width, 6))
+            if "axes" in plot_kw:
+                ax1, ax2 = plot_kw['axes']
+                fig = ax1.figure
+            else:
+                fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(width, 6))
             _, stats1 = gr_record.plot(ax=ax1, **plot_kw)
             _, stats2 = gr_diffrecord.plot(ax=ax2, with_ruler=False, **plot_kw)
             max_level_1 = max([0] +[

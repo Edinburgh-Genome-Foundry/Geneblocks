@@ -22,6 +22,6 @@ diff_blocks = DiffBlocks.from_sequences(seq1, seq2)
 # PLOT EVERYTHING
 fig, axes = plt.subplots(3, 1, figsize=(15, 8))
 common_blocks.plot_common_blocks(axes=axes[:-1])
-diff_blocks.plot(ax=axes[-1])
+diff_blocks.plot(ax=axes[-1], separate_axes=False)
 axes[-1].set_xlabel("Changes in seq2 vs. seq1")
 fig.savefig("complex_sequences.png", bbox_inches='tight')

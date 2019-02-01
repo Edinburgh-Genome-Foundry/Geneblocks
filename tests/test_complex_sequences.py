@@ -3,7 +3,7 @@ import geneblocks.sequence_modification_utils as smu
 import matplotlib.pyplot as plt
 
 def test_complex_sequences():
-    seq1 = random_dna_sequence(50000)
+    seq1 = random_dna_sequence(50000, seed=123)
     seq1 = smu.copy(seq1, 25000, 30000, 50000)
 
     seq2 = seq1

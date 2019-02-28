@@ -143,7 +143,8 @@ class DiffBlocks:
         self.blocks = blocks
 
     @staticmethod
-    def from_sequences(s1, s2, contract_under=3, blast_over=5000):
+    def from_sequences(s1, s2, contract_under=3, blast_over=5000,
+                       use_junk_over=100):
         
         # Simple case to eliminate the trivial case of equality
         seq_s1 = str(s1.seq) if hasattr(s1, 'seq') else str(s1)
@@ -185,8 +186,6 @@ class DiffBlocks:
                 else:
                     subsequence_1 = s1[end1: next_start1]
                     subsequence_2 = s2[end2: next_start2]
-                    
-                    
                     subdiffblocks = DiffBlocks.from_sequences(
                         subsequence_1, subsequence_2,
                         contract_under=contract_under, blast_over=None).blocks
@@ -203,10 +202,11 @@ class DiffBlocks:
                                    key=lambda b: b.s2_location.to_tuple())
             return DiffBlocks(s1, s2, sorted_blocks)
 
-        matcher = SequenceMatcher(a=s1.upper(), b=s2.upper(), autojunk=False)
-        if matcher.quick_ratio() < 1:
-            matcher = SequenceMatcher(a=s1.upper(), b=s2.upper(),
-                                      autojunk=True)
+        upper_s1, upper_s2 = s1.upper(), s2.upper()
+        matcher = SequenceMatcher(a=upper_s1, b=upper_s2, autojunk=False)
+        ratio = matcher.quick_ratio()
+        if (max(len(s1), len(s2)) * (1.0 - ratio)) > use_junk_over:
+            matcher = SequenceMatcher(a=upper_s1, b=upper_s2, autojunk=True)
         blocks = [
             DiffBlock(operation,
                       Location(s1s, s1e, sequence=s1),

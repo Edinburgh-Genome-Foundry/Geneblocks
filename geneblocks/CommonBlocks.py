@@ -38,10 +38,12 @@ class CommonBlocks:
     """
 
     def __init__(self, sequences, block_selection="most_coverage_first",
-                 ignore_self_homologies=False, min_block_size=80):
+                 ignore_self_homologies=False, min_block_size=80,
+                 max_block_size=None):
         """Initialize, compute best blocks."""
         self.block_selection = block_selection
         self.min_block_size = min_block_size
+        self.max_block_size = max_block_size
         self.ignore_self_homologies = ignore_self_homologies
         if isinstance(sequences, (list, tuple)):
             if hasattr(sequences[0], 'seq'):
@@ -121,6 +123,9 @@ class CommonBlocks:
             qstart, qend = int(qstart) - 1, int(qend)
             sstart, send = int(sstart) - 1, int(send)
             if qend - qstart < self.min_block_size:
+                continue
+            max_size = self.max_block_size
+            if (max_size is not None) and (qend - qstart > max_size):
                 continue
             location = (subject, sstart, send)
             self.intermatches[query][(qstart, qend)].append(location)
@@ -218,7 +223,6 @@ class CommonBlocks:
         self.common_blocks = OrderedDict()
         if len(common_blocks) > 0:
             number_size = int(np.log10(len(common_blocks))) + 1
-
             for i, (sequence, locations) in enumerate(common_blocks):
                 block_name = 'block_%s' % (str(i + 1).zfill(number_size))
                 self.common_blocks[block_name] = {

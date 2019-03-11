@@ -1,10 +1,9 @@
 from copy import deepcopy
 from difflib import SequenceMatcher
-
-import networkx as nx
 from dna_features_viewer import BiopythonTranslator
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import networkx as nx
 
 from .Location import Location
 from .biotools import sequence_to_record, sequences_differences

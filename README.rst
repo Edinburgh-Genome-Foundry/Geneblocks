@@ -1,7 +1,7 @@
 GeneBlocks
 ===========
 
-.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
+.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks
    :alt: Travis CI build status
 

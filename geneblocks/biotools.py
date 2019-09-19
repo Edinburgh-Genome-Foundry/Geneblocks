@@ -6,11 +6,13 @@ try:
     from Bio.Alphabet import DNAAlphabet
     from Bio.SeqFeature import SeqFeature, FeatureLocation
     from Bio import SeqIO
+
     BIOPYTHON_AVAILABLE = True
-except:
+except ImportError:
     BIOPYTHON_AVAILABLE = False
 
-complements_dict = {"A":"T", "T":"A", "C":"G", "G":"C"}
+complements_dict = {"A": "T", "T": "A", "C": "G", "G": "C"}
+
 
 def random_dna_sequence(length, probas=None, seed=None):
     """Return a random DNA sequence ("ATGGCGT...") with the specified length.
@@ -41,33 +43,42 @@ def random_dna_sequence(length, probas=None, seed=None):
         sequence = np.random.choice(bases, length, p=probas)
     return "".join(sequence)
 
+
 def load_record(filename, linear=True, name="id", upperize=True):
     formt = "genbank" if filename.endswith(("gb", "gbk")) else "fasta"
     record = SeqIO.read(filename, formt)
     if upperize:
         record.seq = record.seq.upper()
     record.linear = linear
-    if name != 'id':
+    if name != "id":
         record.id = name
     record.name = record.id.replace(" ", "_")[:20]
 
     return record
 
+
 def complement(sequence):
     return "".join(complements_dict[c] for c in sequence)
+
 
 def reverse_complement(sequence):
     return complement(sequence)[::-1]
 
-def sequence_to_record(sequence, record_id=None, name='unnamed', features=()):
+
+def sequence_to_record(sequence, record_id=None, name="unnamed", features=()):
     if not BIOPYTHON_AVAILABLE:
         raise ImportError("Creating records requires Biopython installed.")
-    return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()),
-                     name=name, id=record_id,
-                     features=list(features))
+    return SeqRecord(
+        Seq(sequence, alphabet=DNAAlphabet()),
+        name=name,
+        id=record_id,
+        features=list(features),
+    )
 
-def annotate_record(seqrecord, location="full", feature_type="feature",
-                    margin=0, **qualifiers):
+
+def annotate_record(
+    seqrecord, location="full", feature_type="feature", margin=0, **qualifiers
+):
     """Add a feature to a Biopython SeqRecord.
 
     Parameters
@@ -93,16 +104,17 @@ def annotate_record(seqrecord, location="full", feature_type="feature",
         raise ImportError("Creating records requires Biopython installed.")
 
     if location == "full":
-        location = (margin, len(seqrecord)-margin)
+        location = (margin, len(seqrecord) - margin)
 
     strand = location[2] if len(location) == 3 else 1
     seqrecord.features.append(
         SeqFeature(
             FeatureLocation(location[0], location[1], strand),
             qualifiers=qualifiers,
-            type=feature_type
+            type=feature_type,
         )
     )
+
 
 def sequences_differences_array(seq1, seq2):
     """Return an array [0, 0, 1, 0, ...] with 1s for sequence differences.
@@ -110,8 +122,9 @@ def sequences_differences_array(seq1, seq2):
     seq1, seq2 should both be ATGC strings.
     """
     if len(seq1) != len(seq2):
-        raise ValueError("Only use on same-size sequences (%d, %d)" %
-                         (len(seq1), len(seq2)))
+        raise ValueError(
+            "Only use on same-size sequences (%d, %d)" % (len(seq1), len(seq2))
+        )
     arr1 = np.fromstring(seq1, dtype="uint8")
     arr2 = np.fromstring(seq2, dtype="uint8")
     return arr1 != arr2

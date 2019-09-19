@@ -1,10 +1,11 @@
 from .biotools import reverse_complement
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 
-class Location:
 
-    def __init__(self, start, end, strand=None, sequence=None,
-                 sequence_id=None):
+class Location:
+    def __init__(
+        self, start, end, strand=None, sequence=None, sequence_id=None
+    ):
 
         self.start = start
         self.end = end
@@ -19,9 +20,9 @@ class Location:
         """
         if sequence is None:
             sequence = self.sequence
-        if hasattr(sequence, 'seq'):
+        if hasattr(sequence, "seq"):
             sequence = str(sequence.seq)
-        result = sequence[self.start:self.end]
+        result = sequence[self.start : self.end]
         if self.strand == -1:
             return reverse_complement(result)
         else:
@@ -33,13 +34,13 @@ class Location:
         if self.strand is not None:
             result += {1: "(+)", -1: "(-)", 0: ""}[self.strand]
         if self.sequence_id is not None:
-            result = self.sequence_id + '|' + result
+            result = self.sequence_id + "|" + result
         return result
 
     def __len__(self):
         """Size of the location"""
         return abs(self.end - self.start)
-    
+
     def to_tuple(self):
         return self.start, self.end, self.strand
 
@@ -54,6 +55,8 @@ class Location:
     def to_biopython_feature(self, feature_type="misc_feature", **qualifiers):
         """Return a Biopython SeqFeature with same location and custom
         qualifiers."""
-        return SeqFeature(self.to_biopython_location(),
-                          type=feature_type,
-                          qualifiers=qualifiers)
+        return SeqFeature(
+            self.to_biopython_location(),
+            type=feature_type,
+            qualifiers=qualifiers,
+        )

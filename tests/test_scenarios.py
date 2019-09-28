@@ -41,7 +41,7 @@ def test_DiffBlocks_basics(tmpdir):
     seq_1 = load_record(os.path.join("tests", "sequences", "sequence1.gb"))
     seq_2 = load_record(os.path.join("tests", "sequences", "sequence2.gb"))
 
-    diff_blocks = DiffBlocks.from_sequences(seq_1, seq_2)
+    diff_blocks = DiffBlocks.from_sequences(seq_1, seq_2).merged()
     # next line is just to cover separate_axes=false
     diff_blocks.plot(figure_width=8, separate_axes=False)
     ax1, __ax2 = diff_blocks.plot(figure_width=8)
@@ -57,49 +57,6 @@ def test_DiffBlocks_basics(tmpdir):
         "delete 2304-2404|2524-2524",
         "equal 2404-3404|2524-3524",
     ]
-
-
-def test_diffblocks_trim_replace():
-    seq1 = "AAAATTTTAAAATTTTAAAATTTT"
-    seq2 = "AAAATTTTGGGGGGTTAAAATTTT"
-
-    diff = DiffBlocks(
-        seq1,
-        seq2,
-        [
-            DiffBlock(
-                "equal",
-                s1_location=Location(0, 5, sequence=seq1),
-                s2_location=Location(0, 5, sequence=seq2),
-            ),
-            DiffBlock(
-                "replace",
-                s1_location=Location(5, 20, sequence=seq1),
-                s2_location=Location(5, 20, sequence=seq2),
-            ),
-            DiffBlock(
-                "equal",
-                s1_location=Location(20, 24, sequence=seq1),
-                s2_location=Location(20, 24, sequence=seq2),
-            ),
-        ],
-    )
-    diff.trim_all_replace_blocks()
-    assert len(diff.blocks) == 3
-    b1, b2, b3 = diff.blocks
-    assert (b1.operation == "equal") and (
-        b1.s1_location.to_tuple() == (0, 8, None)
-    )
-    assert (b2.operation == "replace") and (
-        b2.s1_location.to_tuple() == (8, 14, None)
-    )
-    assert (b3.operation == "equal") and (
-        b3.s1_location.to_tuple() == (14, 24, None)
-    )
-    new_s1, new_s2 = diff.reconstruct_sequences_from_blocks([b1, b2, b3])
-    assert new_s1 == seq1
-    assert new_s2 == seq2
-
 
 def test_features_transfer():
     seq_folder = os.path.join("tests", "sequences", "features_transfer")
@@ -125,5 +82,5 @@ def test_good_management_of_homologies():
     seq1 = b1 + "A" + "T" + b2 + b3
     seq2 = "T" + b1 + "T" + b3 + b2 + b1 + b1
 
-    blocks = DiffBlocks.from_sequences(seq1, seq2)
-    assert len(blocks.blocks) == 8
+    blocks = DiffBlocks.from_sequences(seq1, seq2).merged()
+    assert len(blocks.blocks) == 10

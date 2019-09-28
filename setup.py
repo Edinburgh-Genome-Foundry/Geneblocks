@@ -16,4 +16,4 @@ setup(
     keywords="DNA sequence blocks diff synthetic-biology bioinformatics",
     packages=find_packages(exclude='docs'),
     install_requires=['numpy', 'Biopython', 'dna_features_viewer',
-                      'networkx'])
+                      'networkx', 'Levenshtein'])

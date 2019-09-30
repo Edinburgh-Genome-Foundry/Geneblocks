@@ -1,3 +1,10 @@
+.. raw:: html
+
+    <p align="center">
+    <img alt="DNA Chisel Logo" title="DNA Chisel" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Geneblocks/master/docs/_static/images/title.png" width="450">
+    <br /><br />
+    </p>
+
 GeneBlocks
 ===========
 
@@ -32,6 +39,7 @@ Installation
 The CommonBlocks feature requires NCBI BLAST+. On Ubuntu, install it with
 
 .. code:: shell
+
     (sudo) apt-get install ncbi-blast+
 
 
@@ -39,13 +47,13 @@ You can install GeneBlocks through PIP
 
 .. code:: shell
 
-    sudo pip install geneblocks
+    (sudo) pip install geneblocks
 
 Alternatively, you can unzip the sources in a folder and type
 
 .. code:: shell
 
-    sudo python setup.py install
+    (sudo) python setup.py install
 
 
 Usage

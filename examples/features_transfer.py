@@ -15,7 +15,7 @@ plasmid = load_record(plasmid_path, name="plasmid")
 
 # TRANSFER THE FEATURES
 
-blocks = CommonBlocks([part, plasmid])
+blocks = CommonBlocks.from_sequences([part, plasmid])
 new_records = blocks.copy_features_between_common_blocks(inplace=False)
 annotated_plasmid = new_records["plasmid"]  # record with all features
 
@@ -42,4 +42,4 @@ tr.translate_record(annotated_plasmid).plot(ax2, with_ruler=False)
 
 fig.tight_layout()
 fig.subplots_adjust(hspace=0.6)
-fig.savefig("features_transfer.png", dpi=150)
+fig.savefig("features_transfer.png", dpi=125)

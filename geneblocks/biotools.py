@@ -1,3 +1,6 @@
+import tempfile
+import subprocess
+
 import numpy as np
 
 try:

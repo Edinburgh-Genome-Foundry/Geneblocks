@@ -58,11 +58,11 @@ class DiffBlocks:
             # Use CommonBlocks to find all big common blocks
 
             sequences = {"s1": s1, "s2": s2}
-            common_blocks = CommonBlocks(
+            common_blocks = CommonBlocks.from_sequences(
                 sequences,
                 min_block_size=100,
-                ignore_self_homologies=True,
-                block_selection="larger_first",
+                include_self_homologies=False,
+                block_selection_method="larger_first",
             ).common_blocks
             blocks_in_seqs, remarks = get_optimal_common_blocks(common_blocks)
 
@@ -216,7 +216,6 @@ class DiffBlocks:
                 [0] + [v["annotation_y"] for v in stats2[1].values()]
             )
             n_levels = max_level_1 + max_level_2
-            print(n_levels)
             if max_level_1 and max_level_2:
                 plt.close(fig)
 

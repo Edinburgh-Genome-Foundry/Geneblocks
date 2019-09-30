@@ -21,7 +21,7 @@ def test_CommonBlocks_basics(tmpdir):
         "e": C3 + reverse_complement(C2 + C1),
     }
 
-    common_blocks = CommonBlocks(sequences)
+    common_blocks = CommonBlocks.from_sequences(sequences)
     assert len(common_blocks.common_blocks) == 3
 
     axes = common_blocks.plot_common_blocks()
@@ -64,7 +64,7 @@ def test_features_transfer():
     plasmid = load_record(
         os.path.join(seq_folder, "plasmid_to_annotate.gb"), name="plasmid"
     )
-    blocks = CommonBlocks([insert, plasmid])
+    blocks = CommonBlocks.from_sequences([insert, plasmid])
     records = blocks.copy_features_between_common_blocks(inplace=False)
     assert len(records["plasmid"].features) == 6
     assert len(plasmid.features) == 2

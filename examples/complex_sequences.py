@@ -16,8 +16,8 @@ seq2 = smu.insert(seq2, 10000, random_dna_sequence(2000))
 seq2 = smu.insert(seq2, 0, 1000*"A")
 
 # FIND COMMON BLOCKS AND DIFFS
-common_blocks = CommonBlocks({'seq1': seq1, 'seq2': seq2})
-diff_blocks = DiffBlocks.from_sequences(seq1, seq2)
+common_blocks = CommonBlocks.from_sequences({'seq1': seq1, 'seq2': seq2})
+diff_blocks = DiffBlocks.from_sequences(seq1, seq2).merged()
 
 # PLOT EVERYTHING
 fig, axes = plt.subplots(3, 1, figsize=(15, 8))

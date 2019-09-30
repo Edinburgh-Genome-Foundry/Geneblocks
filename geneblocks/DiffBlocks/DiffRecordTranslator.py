@@ -7,9 +7,10 @@ class DiffRecordTranslator(BiopythonTranslator):
     @staticmethod
     def compute_feature_color(f):
         return dict(
-            diff_delete="red",
-            diff_insert="green",
-            diff_replace="orange",
+            diff_delete="#E76F51",  # RED
+            diff_insert="#2A9D8F",  # GREEN
+            diff_replace="#E9C46A",  # YELLOW
+            diff_change="#F4A261",  # ORANGE
             diff_reverse="white",
             diff_transpose="white",
         ).get(f.type, "white")

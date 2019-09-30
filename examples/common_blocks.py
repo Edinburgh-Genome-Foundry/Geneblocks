@@ -11,6 +11,6 @@ sequences = {
     "e": C3 + reverse_complement(C2 + C1)
 }
 
-common_blocks = CommonBlocks(sequences)
+common_blocks = CommonBlocks.from_sequences(sequences)
 axes = common_blocks.plot_common_blocks()
 axes[0].figure.savefig("common_blocks.png", bbox_inches="tight")

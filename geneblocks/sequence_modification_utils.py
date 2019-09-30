@@ -23,6 +23,7 @@ def reverse(seq, start, end):
 
 
 def move(seq, start, end, diff):
+    """Move a subsequence by "diff" nucleotides the left or the right."""
     sub = seq[start:end]
     if diff > 0:
         return seq[:start] + seq[end : end + diff] + sub + seq[end + diff :]

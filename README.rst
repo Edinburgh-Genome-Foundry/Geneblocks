@@ -62,7 +62,7 @@ Finding common blocks in a set of sequences:
     # Input sequences are in a dictionnary as follows:
     sequences = {'seq1': 'ATTTGCGT...', 'seq2': 'ATGCCCGCACG...', ...}
 
-    common_blocks = CommonBlocks(sequences)
+    common_blocks = CommonBlocks.from_sequences(sequences)
 
     # PLOT THE BLOCKS
     axes = common_blocks.plot_common_blocks()
@@ -98,9 +98,9 @@ plasmid record.
     from geneblocks import CommonBlocks, load_record
     part = load_record('part.gb', name='insert')
     plasmid = load_record('part.gb', name='plasmid')
-    blocks = CommonBlocks([part, plasmid])
+    blocks = CommonBlocks.from_sequences([part, plasmid])
     new_records = blocks.copy_features_between_common_blocks(inplace=False)
-    annotated_plasmid = new_records['plasmid'] # Biopython record with all features
+    annotated_plasmid = new_records['plasmid'] # Biopython record
 
 
 The resulting annotated plasmids has annotations from both the original plasmid and the annotated part:
@@ -157,7 +157,7 @@ of modifications brought to the second sequence:
     seq2 = smu.insert(seq2, 0, 1000*"A")
 
     # FIND COMMON BLOCKS AND DIFFS
-    common_blocks = CommonBlocks({'seq1': seq1, 'seq2': seq2})
+    common_blocks = CommonBlocks.from_sequences({'seq1': seq1, 'seq2': seq2})
     diff_blocks = DiffBlocks.from_sequences(seq1, seq2).merged()
 
     # PLOT EVERYTHING

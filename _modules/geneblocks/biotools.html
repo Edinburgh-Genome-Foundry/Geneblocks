@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>geneblocks.biotools</title>
+    
+      <link rel="stylesheet" href="../../_static/pygments.css">
+      <link rel="stylesheet" href="../../_static/theme.css">
+      <link rel="stylesheet" href="../../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+
+      
+      <script src="../../_static/theme-vendors.js"></script>
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <img class="logo" src="../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../index.html#licence">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../ref/CommonBlocks.html" class="reference internal ">CommonBlocks</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/DiffBlocks.html" class="reference internal ">DiffBlocks</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/sequence_modification_utils.html" class="reference internal ">Sequence modifications utils</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>geneblocks.biotools</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for geneblocks.biotools</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
+    <span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="k">import</span> <span class="n">SeqRecord</span>
+    <span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">DNAAlphabet</span>
+    <span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="k">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
+    <span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+
+    <span class="n">BIOPYTHON_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">BIOPYTHON_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">complements_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="random_dna_sequence"><a class="viewcode-back" href="../../ref/biotools.html#geneblocks.biotools.random_dna_sequence">[docs]</a><span class="k">def</span> <span class="nf">random_dna_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">probas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a random DNA sequence (&quot;ATGGCGT...&quot;) with the specified length.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    length</span>
+<span class="sd">      Length of the DNA sequence.</span>
+
+<span class="sd">    proba</span>
+<span class="sd">      Frequencies for the different nucleotides, for instance</span>
+<span class="sd">      ``probas={&quot;A&quot;:0.2, &quot;T&quot;:0.3, &quot;G&quot;:0.3, &quot;C&quot;:0.2}``.</span>
+<span class="sd">      If not specified, all nucleotides are equiprobable (p=0.25).</span>
+
+<span class="sd">    seed</span>
+<span class="sd">      The seed to feed to the random number generator. When a seed is provided</span>
+<span class="sd">      the random results depend deterministically on the seed, thus enabling</span>
+<span class="sd">      reproducibility</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">probas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s2">&quot;ATCG&quot;</span><span class="p">),</span> <span class="n">length</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bases</span><span class="p">,</span> <span class="n">probas</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">probas</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">bases</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">probas</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">load_record</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">upperize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">formt</span> <span class="o">=</span> <span class="s2">&quot;genbank&quot;</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;gb&quot;</span><span class="p">,</span> <span class="s2">&quot;gbk&quot;</span><span class="p">))</span> <span class="k">else</span> <span class="s2">&quot;fasta&quot;</span>
+    <span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">formt</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">upperize</span><span class="p">:</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">record</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">linear</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">record</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)[:</span><span class="mi">20</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">record</span>
+
+
+<span class="k">def</span> <span class="nf">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">complements_dict</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">reverse_complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">sequence_to_record</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">record_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;unnamed&quot;</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="p">()):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">BIOPYTHON_AVAILABLE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Creating records requires Biopython installed.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">SeqRecord</span><span class="p">(</span>
+        <span class="n">Seq</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="n">DNAAlphabet</span><span class="p">()),</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">record_id</span><span class="p">,</span>
+        <span class="n">features</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="annotate_record"><a class="viewcode-back" href="../../ref/biotools.html#geneblocks.biotools.annotate_record">[docs]</a><span class="k">def</span> <span class="nf">annotate_record</span><span class="p">(</span>
+    <span class="n">seqrecord</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;feature&quot;</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">qualifiers</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a feature to a Biopython SeqRecord.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    seqrecord</span>
+<span class="sd">      The biopython seqrecord to be annotated.</span>
+
+<span class="sd">    location</span>
+<span class="sd">      Either (start, end) or (start, end, strand). (strand defaults to +1)</span>
+
+<span class="sd">    feature_type</span>
+<span class="sd">      The type associated with the feature</span>
+
+<span class="sd">    margin</span>
+<span class="sd">      Number of extra bases added on each side of the given location.</span>
+
+<span class="sd">    qualifiers</span>
+<span class="sd">      Dictionnary that will be the Biopython feature&#39;s `qualifiers` attribute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">BIOPYTHON_AVAILABLE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Creating records requires Biopython installed.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">margin</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqrecord</span><span class="p">)</span> <span class="o">-</span> <span class="n">margin</span><span class="p">)</span>
+
+    <span class="n">strand</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">seqrecord</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="n">SeqFeature</span><span class="p">(</span>
+            <span class="n">FeatureLocation</span><span class="p">(</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">strand</span><span class="p">),</span>
+            <span class="n">qualifiers</span><span class="o">=</span><span class="n">qualifiers</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">feature_type</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sequences_differences_array"><a class="viewcode-back" href="../../ref/biotools.html#geneblocks.biotools.sequences_differences_array">[docs]</a><span class="k">def</span> <span class="nf">sequences_differences_array</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an array [0, 0, 1, 0, ...] with 1s for sequence differences.</span>
+
+<span class="sd">    seq1, seq2 should both be ATGC strings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq1</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq2</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Only use on same-size sequences (</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq1</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq2</span><span class="p">))</span>
+        <span class="p">)</span>
+    <span class="n">arr1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+    <span class="n">arr2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">arr1</span> <span class="o">!=</span> <span class="n">arr2</span></div>
+
+
+<div class="viewcode-block" id="sequences_differences"><a class="viewcode-back" href="../../ref/biotools.html#geneblocks.biotools.sequences_differences">[docs]</a><span class="k">def</span> <span class="nf">sequences_differences</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the number of nucleotides that differ in the two sequences.</span>
+
+<span class="sd">    seq1, seq2 should be strings of DNA sequences e.g. &quot;ATGCTGTGC&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sequences_differences_array</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

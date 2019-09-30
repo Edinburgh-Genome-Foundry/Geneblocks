@@ -1,0 +1,421 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>geneblocks.CommonBlocks.CommonBlocks</title>
+    
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#licence">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/CommonBlocks.html" class="reference internal ">CommonBlocks</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/DiffBlocks.html" class="reference internal ">DiffBlocks</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/sequence_modification_utils.html" class="reference internal ">Sequence modifications utils</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>geneblocks.CommonBlocks.CommonBlocks</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for geneblocks.CommonBlocks.CommonBlocks</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Defines central class BlockFinder.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+
+
+<span class="kn">from</span> <span class="nn">dna_features_viewer</span> <span class="k">import</span> <span class="n">BiopythonTranslator</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
+
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="n">annotate_record</span>
+
+<span class="kn">from</span> <span class="nn">.commonblocks_tools</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">format_sequences_as_dicts</span><span class="p">,</span>
+    <span class="n">select_common_blocks</span><span class="p">,</span>
+    <span class="n">find_homologies_between_sequences</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># TODO: Simplify the code by using the new Location class in Location.py</span>
+
+
+<div class="viewcode-block" id="CommonBlocks"><a class="viewcode-back" href="../../../ref/CommonBlocks.html#geneblocks.CommonBlocks">[docs]</a><span class="k">class</span> <span class="nc">CommonBlocks</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class to represent a set of common blocks from different sequences.</span>
+
+<span class="sd">    Create with ``CommonBlocks.from_sequences``:</span>
+
+<span class="sd">    &gt;&gt;&gt; common_blocks = CommonBlocks.from_sequences({&#39;s1&#39;: &#39;ATGC...&#39;})</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    common_blocks</span>
+<span class="sd">      A dictionnary of the sequences to compare, of the form</span>
+<span class="sd">      {sequence_name: ATGC_sequence_string} or a list of records, all with</span>
+<span class="sd">      different IDs.</span>
+
+<span class="sd">    records</span>
+<span class="sd">      A dictionnary of the biopython records of the sequences</span>
+<span class="sd">      {record_id: record}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">common_blocks</span><span class="p">,</span> <span class="n">records</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize, compute best blocks.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">common_blocks</span> <span class="o">=</span> <span class="n">common_blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> <span class="n">records</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_sequences</span><span class="p">(</span>
+        <span class="n">sequences</span><span class="p">,</span>
+        <span class="n">block_selection_method</span><span class="o">=</span><span class="s2">&quot;most_coverage_first&quot;</span><span class="p">,</span>
+        <span class="n">include_self_homologies</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">min_block_size</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+        <span class="n">max_block_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">sequences_dict</span><span class="p">,</span> <span class="n">records_dict</span> <span class="o">=</span> <span class="n">format_sequences_as_dicts</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+        <span class="n">homologies_dict</span> <span class="o">=</span> <span class="n">find_homologies_between_sequences</span><span class="p">(</span>
+            <span class="n">sequences_dict</span><span class="p">,</span>
+            <span class="n">min_size</span><span class="o">=</span><span class="n">min_block_size</span><span class="p">,</span>
+            <span class="n">max_size</span><span class="o">=</span><span class="n">max_block_size</span><span class="p">,</span>
+            <span class="n">include_self_homologies</span><span class="o">=</span><span class="n">include_self_homologies</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">common_blocks</span> <span class="o">=</span> <span class="n">select_common_blocks</span><span class="p">(</span>
+            <span class="n">homologies_dict</span><span class="p">,</span> <span class="n">sequences_dict</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="n">min_block_size</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">block_selection_method</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">CommonBlocks</span><span class="p">(</span><span class="n">common_blocks</span><span class="o">=</span><span class="n">common_blocks</span><span class="p">,</span> <span class="n">records</span><span class="o">=</span><span class="n">records_dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CommonBlocks.compute_unique_blocks"><a class="viewcode-back" href="../../../ref/CommonBlocks.html#geneblocks.CommonBlocks.compute_unique_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">compute_unique_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionnary listing unique blocks by sequence.</span>
+
+<span class="sd">        The unique blocks are the blocks between the selected common blocks.</span>
+
+<span class="sd">        The result is of the form {seq: [(start, end), (start2, end2), ...]}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">unique_blocks</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">seqname</span><span class="p">,</span> <span class="n">rec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequences_with_annotated_blocks</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">blocks_locations</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+                <span class="o">+</span> <span class="nb">sorted</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">rec</span><span class="o">.</span><span class="n">features</span>
+                        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_block&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">))]</span>
+            <span class="p">)</span>
+            <span class="n">unique_blocks</span><span class="p">[</span><span class="n">seqname</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">end1</span><span class="p">,</span> <span class="n">start2</span><span class="p">)</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">end1</span><span class="p">),</span> <span class="p">(</span><span class="n">start2</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                    <span class="n">blocks_locations</span><span class="p">,</span> <span class="n">blocks_locations</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">start2</span> <span class="o">-</span> <span class="n">end1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+            <span class="p">]</span>
+        <span class="k">return</span> <span class="n">unique_blocks</span></div>
+
+<div class="viewcode-block" id="CommonBlocks.common_blocks_to_csv"><a class="viewcode-back" href="../../../ref/CommonBlocks.html#geneblocks.CommonBlocks.common_blocks_to_csv">[docs]</a>    <span class="k">def</span> <span class="nf">common_blocks_to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write the common blocks into a CSV file.</span>
+
+<span class="sd">        If a target CSV file is provided the result is written to that file.</span>
+<span class="sd">        Otherwise the result is returned as a string.</span>
+
+
+<span class="sd">        The columns of the CSV file are &quot;block&quot;, &quot;size&quot;, &quot;locations&quot;, and</span>
+<span class="sd">        sequence.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">csv_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;block;size;locations;sequence&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span>
+                <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">block_name</span><span class="p">,</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;sequence&quot;</span><span class="p">])),</span>
+                        <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="p">[</span>
+                                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cst</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="p">(</span><span class="n">cst</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">))</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span>
+                                    <span class="s2">&quot;locations&quot;</span>
+                                <span class="p">]</span>
+                            <span class="p">]</span>
+                        <span class="p">),</span>
+                        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;sequence&quot;</span><span class="p">],</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_blocks</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">target_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">csv_content</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">csv_content</span></div>
+
+<div class="viewcode-block" id="CommonBlocks.common_blocks_records"><a class="viewcode-back" href="../../../ref/CommonBlocks.html#geneblocks.CommonBlocks.common_blocks_records">[docs]</a>    <span class="k">def</span> <span class="nf">common_blocks_records</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return all common blocks as a list of Biopython records.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_blocks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">cst</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">)</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;locations&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">cst</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">block_name</span>
+            <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">records</span></div>
+
+<div class="viewcode-block" id="CommonBlocks.unique_blocks_records"><a class="viewcode-back" href="../../../ref/CommonBlocks.html#geneblocks.CommonBlocks.unique_blocks_records">[docs]</a>    <span class="k">def</span> <span class="nf">unique_blocks_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return all unique blocks as a list of Biopython records.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">seqname</span><span class="p">,</span> <span class="n">locations</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_unique_blocks</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">locations</span><span class="p">):</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">seqname</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+                <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%03d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">seqname</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">records</span></div>
+
+<div class="viewcode-block" id="CommonBlocks.sequences_with_annotated_blocks"><a class="viewcode-back" href="../../../ref/CommonBlocks.html#geneblocks.CommonBlocks.sequences_with_annotated_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">sequences_with_annotated_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of Biopython records representing the sequences</span>
+<span class="sd">        with annotations indicating the common blocks</span>
+
+<span class="sd">        Parameter ``colors`` is either a list of colors or &quot;auto&quot; for the</span>
+<span class="sd">        default.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">colors</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">cm</span><span class="o">.</span><span class="n">Paired</span><span class="p">(</span><span class="mf">0.21</span> <span class="o">*</span> <span class="n">i</span> <span class="o">%</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)]</span>
+            <span class="p">)</span>
+        <span class="n">blocks_and_colors</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">common_blocks</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">colors</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">),</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">blocks_and_colors</span><span class="p">:</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">seqname</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;locations&quot;</span><span class="p">]:</span>
+                <span class="n">annotate_record</span><span class="p">(</span>
+                    <span class="n">records</span><span class="p">[</span><span class="n">seqname</span><span class="p">],</span>
+                    <span class="n">location</span><span class="p">,</span>
+                    <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
+                    <span class="n">is_block</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">records</span></div>
+
+<div class="viewcode-block" id="CommonBlocks.plot_common_blocks"><a class="viewcode-back" href="../../../ref/CommonBlocks.html#geneblocks.CommonBlocks.plot_common_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">plot_common_blocks</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure_width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ax_height</span><span class="o">=</span><span class="mi">2</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot the common blocks found on vertically stacked axes.</span>
+
+<span class="sd">        The axes on which the plots are drawn are returned at the end.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        colors</span>
+<span class="sd">          Either a list of colors to use for blocks or &quot;auto&quot; for the default.</span>
+
+<span class="sd">        axes</span>
+<span class="sd">          A list of matplotlib axes on which to plot, or None for new axes</span>
+
+<span class="sd">        figure_width</span>
+<span class="sd">          Width of the final figure in inches</span>
+
+<span class="sd">        ax_eight</span>
+<span class="sd">          Height of each plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">translator</span> <span class="o">=</span> <span class="n">BiopythonTranslator</span><span class="p">()</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequences_with_annotated_blocks</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">),</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">figure_width</span><span class="p">,</span> <span class="n">ax_height</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">)),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">seqname</span><span class="p">,</span> <span class="n">record</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">records</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="n">gr_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+            <span class="n">gr_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">ax</span><span class="p">,</span>
+                <span class="n">x_lim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">values</span><span class="p">()])),</span>
+                <span class="n">with_ruler</span><span class="o">=</span><span class="p">(</span><span class="n">ax</span> <span class="o">==</span> <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">seqname</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">))</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">axes</span></div>
+
+    <span class="k">def</span> <span class="nf">copy_features_between_common_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">extract_subrecord</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span> <span class="o">=</span> <span class="n">location</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">record</span>
+
+        <span class="k">def</span> <span class="nf">extract_features</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+            <span class="n">new_features</span> <span class="o">=</span> <span class="p">[</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">new_features</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;original_record&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">new_features</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">+=</span> <span class="n">offset</span>
+            <span class="k">return</span> <span class="n">new_features</span>
+
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="n">records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">records</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_blocks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">locations</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;locations&quot;</span><span class="p">]</span>
+            <span class="n">subrecords</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">rec_id</span><span class="p">:</span> <span class="n">extract_subrecord</span><span class="p">(</span><span class="n">records</span><span class="p">[</span><span class="n">rec_id</span><span class="p">],</span> <span class="n">location</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">rec_id</span><span class="p">,</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;locations&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">locations</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">for</span> <span class="p">((</span><span class="n">id1</span><span class="p">,</span> <span class="n">loc1</span><span class="p">),</span> <span class="p">(</span><span class="n">id2</span><span class="p">,</span> <span class="n">__loc2</span><span class="p">))</span> <span class="ow">in</span> <span class="p">((</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">),</span> <span class="p">(</span><span class="n">l2</span><span class="p">,</span> <span class="n">l1</span><span class="p">)):</span>
+                    <span class="n">start1</span><span class="p">,</span> <span class="n">__end1</span><span class="p">,</span> <span class="n">strand1</span> <span class="o">=</span> <span class="n">loc1</span>
+                    <span class="c1"># start2, end2, strand2 = loc2</span>
+                    <span class="n">records</span><span class="p">[</span><span class="n">id1</span><span class="p">]</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">extract_features</span><span class="p">(</span>
+                        <span class="n">subrecords</span><span class="p">[</span><span class="n">id2</span><span class="p">],</span> <span class="n">offset</span><span class="o">=</span><span class="n">start1</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="p">(</span><span class="n">strand1</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="p">)</span>
+        <span class="k">return</span> <span class="n">records</span></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

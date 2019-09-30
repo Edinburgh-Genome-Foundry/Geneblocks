@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>DiffBlocks</title>
+    
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Sequence modifications utils" href="sequence_modification_utils.html" />
+  <link rel="prev" title="CommonBlocks" href="CommonBlocks.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#licence">Reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="CommonBlocks.html" class="reference internal ">CommonBlocks</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">DiffBlocks</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#diffblocks" class="reference internal">DiffBlocks</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="sequence_modification_utils.html" class="reference internal ">Sequence modifications utils</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+    <li>DiffBlocks</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="CommonBlocks.html"
+       title="previous chapter">← CommonBlocks</a>
+  </li>
+  <li class="next">
+    <a href="sequence_modification_utils.html"
+       title="next chapter">Sequence modifications utils →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="diffblocks">
+<h1>DiffBlocks<a class="headerlink" href="#diffblocks" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="geneblocks.DiffBlocks">
+<em class="property">class </em><code class="sig-prename descclassname">geneblocks.</code><code class="sig-name descname">DiffBlocks</code><span class="sig-paren">(</span><em class="sig-param">s1</em>, <em class="sig-param">s2</em>, <em class="sig-param">blocks</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/DiffBlocks/DiffBlocks.html#DiffBlocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.DiffBlocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to generate and represent DiffBlocks.</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DiffBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="geneblocks.DiffBlocks.from_sequences">
+<em class="property">static </em><code class="sig-name descname">from_sequences</code><span class="sig-paren">(</span><em class="sig-param">s1</em>, <em class="sig-param">s2</em>, <em class="sig-param">blast_over=500</em>, <em class="sig-param">max_complexity=100000000.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/DiffBlocks/DiffBlocks.html#DiffBlocks.from_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.DiffBlocks.from_sequences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create DiffBlocks by comparing two sequences</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1, s2</strong></p>
+<blockquote>
+<div><p>Two sequences, either “ATGC…” strings or Biopython records.</p>
+</div></blockquote>
+<p><strong>blast_over</strong></p>
+<blockquote>
+<div><p>A blast will be triggered to accelerate homology finding if
+len(s1) + len(s2) &gt; blast_over.</p>
+</div></blockquote>
+<p><strong>max_complexity</strong></p>
+<blockquote>
+<div><p>If len(s1) * len(s2) is over max_complexity, no analysis is done and
+s1 is just labeled as a “change” of s2 (useful internally during the
+recursions of this method)</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="CommonBlocks.html"
+       title="previous chapter">← CommonBlocks</a>
+  </li>
+  <li class="next">
+    <a href="sequence_modification_utils.html"
+       title="next chapter">Sequence modifications utils →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

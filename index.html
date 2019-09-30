@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>GeneBlocks</title>
+    
+      <link rel="stylesheet" href="_static/pygments.css">
+      <link rel="stylesheet" href="_static/theme.css">
+      <link rel="stylesheet" href="_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+
+      
+      <script src="_static/theme-vendors.js"></script>
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="CommonBlocks" href="ref/CommonBlocks.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="#" class="home-link">
+    
+      <img class="logo" src="_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="##licence">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="ref/CommonBlocks.html" class="reference internal ">CommonBlocks</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/DiffBlocks.html" class="reference internal ">DiffBlocks</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/sequence_modification_utils.html" class="reference internal ">Sequence modifications utils</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+    
+    <li>GeneBlocks</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="next">
+    <a href="ref/CommonBlocks.html"
+       title="next chapter">CommonBlocks →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <p align="center">
+<img alt="DNA Chisel Logo" title="DNA Chisel" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Geneblocks/master/docs/_static/images/title.png" width="450">
+<br /><br />
+</p><div class="section" id="geneblocks">
+<h1>GeneBlocks<a class="headerlink" href="#geneblocks" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks"><img alt="Travis CI build status" src="https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://coveralls.io/github/Edinburgh-Genome-Foundry/Geneblocks"><img alt="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/Geneblocks/badge.svg" src="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/Geneblocks/badge.svg" /></a>
+<p>GeneBlocks is a Python library to compare DNA sequences. It can be used to:</p>
+<ul class="simple">
+<li><p>Find common blocks in a group of DNA sequences, to factorize them (e.g. only analyze or synthetize each common block once)</p></li>
+<li><p>Highlight differences between sequences (insertions, deletions, mutations)</p></li>
+<li><p>Transfer Genbank features from one record to another sharing similar subsequences.</p></li>
+</ul>
+<p>At the Edinburgh Genome Foundry, we use GeneBlocks to optimize sequence assembly, explore sets of non-annotated sequences, or visualize the differences
+between different versions of a sequence, and re-annotate records coming from third parties such as DNA manufacturers.</p>
+<div class="section" id="live-demos">
+<h2>Live demos<a class="headerlink" href="#live-demos" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://cuba.genomefoundry.org/find-common-blocks">Find common sequence blocks</a></p>
+<p><a class="reference external" href="https://cuba.genomefoundry.org/compare-two-sequences">Plot sequence diffs</a></p>
+<p><a class="reference external" href="https://cuba.genomefoundry.org/transfer-features">Transfer Genbank features between records</a></p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The CommonBlocks feature requires NCBI BLAST+. On Ubuntu, install it with</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>sudo<span class="o">)</span> apt-get install ncbi-blast+
+</pre></div>
+</div>
+<p>You can install GeneBlocks through PIP</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>sudo<span class="o">)</span> pip install geneblocks
+</pre></div>
+</div>
+<p>Alternatively, you can unzip the sources in a folder and type</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>sudo<span class="o">)</span> python setup.py install
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="finding-common-blocks-in-a-set-of-sequences">
+<h3>Finding common blocks in a set of sequences:<a class="headerlink" href="#finding-common-blocks-in-a-set-of-sequences" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">geneblocks</span> <span class="kn">import</span> <span class="n">CommonBlocks</span>
+
+<span class="c1"># Input sequences are in a dictionnary as follows:</span>
+<span class="n">sequences</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;seq1&#39;</span><span class="p">:</span> <span class="s1">&#39;ATTTGCGT...&#39;</span><span class="p">,</span> <span class="s1">&#39;seq2&#39;</span><span class="p">:</span> <span class="s1">&#39;ATGCCCGCACG...&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">}</span>
+
+<span class="n">common_blocks</span> <span class="o">=</span> <span class="n">CommonBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+
+<span class="c1"># PLOT THE BLOCKS</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">common_blocks</span><span class="o">.</span><span class="n">plot_common_blocks</span><span class="p">()</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;basic_example.png&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+
+<span class="c1"># GET ALL COMMON BLOCKS AS BIOPYTHON RECORDS</span>
+<span class="n">blocks_records</span> <span class="o">=</span> <span class="n">common_blocks</span><span class="o">.</span><span class="n">common_blocks_records</span><span class="p">()</span>
+
+<span class="c1"># WRITE ALL COMMON BLOCKS INTO A CSV SPREADSHEET</span>
+<span class="n">common_blocks</span><span class="o">.</span><span class="n">common_blocks_to_csv</span><span class="p">(</span><span class="n">target_file</span><span class="o">=</span><span class="s2">&quot;blocks.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Result:</p>
+<img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/common_blocks.png'
+ width='600px'/></div>
+<div class="section" id="transfering-features-between-genbank-records">
+<h3>Transfering features between genbank records:<a class="headerlink" href="#transfering-features-between-genbank-records" title="Permalink to this headline">¶</a></h3>
+<p>In this snippet we assume that we have two genbank records:</p>
+<ul class="simple">
+<li><p>A record of an annotated part, containing an expression module.</p></li>
+<li><p>A record of a plasmid which contains the part but the part was not properly annotated</p></li>
+</ul>
+<p>We will use Geneblocks to automatically detect where the part is located in
+the plasmid and automatically copy the features from the part record to the
+plasmid record.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">geneblocks</span> <span class="kn">import</span> <span class="n">CommonBlocks</span><span class="p">,</span> <span class="n">load_record</span>
+<span class="n">part</span> <span class="o">=</span> <span class="n">load_record</span><span class="p">(</span><span class="s1">&#39;part.gb&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;insert&#39;</span><span class="p">)</span>
+<span class="n">plasmid</span> <span class="o">=</span> <span class="n">load_record</span><span class="p">(</span><span class="s1">&#39;part.gb&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;plasmid&#39;</span><span class="p">)</span>
+<span class="n">blocks</span> <span class="o">=</span> <span class="n">CommonBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">([</span><span class="n">part</span><span class="p">,</span> <span class="n">plasmid</span><span class="p">])</span>
+<span class="n">new_records</span> <span class="o">=</span> <span class="n">blocks</span><span class="o">.</span><span class="n">copy_features_between_common_blocks</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">annotated_plasmid</span> <span class="o">=</span> <span class="n">new_records</span><span class="p">[</span><span class="s1">&#39;plasmid&#39;</span><span class="p">]</span> <span class="c1"># Biopython record</span>
+</pre></div>
+</div>
+<p>The resulting annotated plasmids has annotations from both the original plasmid and the annotated part:</p>
+<img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/features_transfer.png'
+ width='600px'/></div>
+<div class="section" id="highlighting-the-differences-between-two-sequences">
+<h3>Highlighting the differences between two sequences:<a class="headerlink" href="#highlighting-the-differences-between-two-sequences" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">seq_1</span> <span class="o">=</span> <span class="n">load_record</span><span class="p">(</span><span class="s2">&quot;sequence1.gb&quot;</span><span class="p">)</span>
+<span class="n">seq_2</span> <span class="o">=</span> <span class="n">load_record</span><span class="p">(</span><span class="s2">&quot;sequence2.gb&quot;</span><span class="p">)</span>
+
+<span class="n">diff_blocks</span> <span class="o">=</span> <span class="n">DiffBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">(</span><span class="n">seq_1</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">diff_blocks</span><span class="o">.</span><span class="n">merged</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figure_width</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;diff_blocks.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Result:</p>
+<img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/diff_blocks.png'
+ width='700px'/></div>
+<div class="section" id="example-on-more-complex-sequences">
+<h3>Example on more complex sequences<a class="headerlink" href="#example-on-more-complex-sequences" title="Permalink to this headline">¶</a></h3>
+<p>In the example below we build two ~50kb “sister” sequences with many insertions,
+deletions, transpositions between them, and even a self-homology. Then we ask
+Geneblocks to compare the two sequences, in term of common blocks, and in terms
+of modifications brought to the second sequence:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">geneblocks</span> <span class="kn">import</span> <span class="n">DiffBlocks</span><span class="p">,</span> <span class="n">CommonBlocks</span><span class="p">,</span> <span class="n">random_dna_sequence</span>
+<span class="kn">import</span> <span class="nn">geneblocks.sequence_modification_utils</span> <span class="kn">as</span> <span class="nn">smu</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="c1"># GENERATE 2 &quot;SISTER&quot; SEQUENCES FOR THE EXAMPLE</span>
+<span class="n">seq1</span> <span class="o">=</span> <span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">50000</span><span class="p">)</span>
+<span class="n">seq1</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="mi">25000</span><span class="p">,</span> <span class="mi">30000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span>
+
+<span class="n">seq2</span> <span class="o">=</span> <span class="n">seq1</span>
+<span class="n">seq2</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="mi">39000</span><span class="p">,</span> <span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">seq2</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="mi">38000</span><span class="p">,</span> <span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">seq2</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="mi">30000</span><span class="p">,</span> <span class="mi">35000</span><span class="p">)</span>
+<span class="n">seq2</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="p">(</span><span class="mi">30000</span><span class="p">,</span> <span class="mi">35000</span><span class="p">),</span> <span class="p">(</span><span class="mi">45000</span><span class="p">,</span> <span class="mi">480000</span><span class="p">))</span>
+<span class="n">seq2</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+<span class="n">seq2</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">2000</span><span class="p">))</span>
+<span class="n">seq2</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="o">*</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+
+<span class="c1"># FIND COMMON BLOCKS AND DIFFS</span>
+<span class="n">common_blocks</span> <span class="o">=</span> <span class="n">CommonBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">({</span><span class="s1">&#39;seq1&#39;</span><span class="p">:</span> <span class="n">seq1</span><span class="p">,</span> <span class="s1">&#39;seq2&#39;</span><span class="p">:</span> <span class="n">seq2</span><span class="p">})</span>
+<span class="n">diff_blocks</span> <span class="o">=</span> <span class="n">DiffBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span><span class="p">)</span><span class="o">.</span><span class="n">merged</span><span class="p">()</span>
+
+<span class="c1"># PLOT EVERYTHING</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">common_blocks</span><span class="o">.</span><span class="n">plot_common_blocks</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">diff_blocks</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">separate_axes</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Changes in seq2 vs. seq1&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;complex_sequences.png&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/complex_sequences.png'
+ width='700px'/></div>
+</div>
+<div class="section" id="licence">
+<h2>Licence<a class="headerlink" href="#licence" title="Permalink to this headline">¶</a></h2>
+<p>Geneblocks is an open-source software originally written at the <a class="reference external" href="http://www.genomefoundry.org">Edinburgh Genome Foundry</a> by <a class="reference external" href="https://github.com/Zulko">Zulko</a>
+and <a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/Geneblocks">released on Github</a> under the MIT licence (copyright Edinburgh Genome Foundry).
+Everyone is welcome to contribute !</p>
+<div class="toctree-wrapper compound">
+</div>
+<div style='text-align: left; margin-bottom: 4em'>
+    <a href="https://twitter.com/share" class="twitter-share-button"
+    data-text="Geneblocks - sequences comparison (similarities, edits) in Python" data-size="large"
+    data-hashtags="synbio,software">Tweet
+    </a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+    if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+    fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+    </script>
+    <iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=geneblocks&type=watch&count=true&size=large"
+    allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe>
+</div></div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="next">
+    <a href="ref/CommonBlocks.html"
+       title="next chapter">CommonBlocks →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

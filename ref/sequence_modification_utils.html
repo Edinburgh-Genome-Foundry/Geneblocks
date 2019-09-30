@@ -1,0 +1,220 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Sequence modifications utils</title>
+    
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Biotools" href="biotools.html" />
+  <link rel="prev" title="DiffBlocks" href="DiffBlocks.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#licence">Reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="CommonBlocks.html" class="reference internal ">CommonBlocks</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="DiffBlocks.html" class="reference internal ">DiffBlocks</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Sequence modifications utils</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#module-geneblocks.sequence_modification_utils" class="reference internal">Sequence modifications utils</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+    <li>Sequence modifications utils</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="DiffBlocks.html"
+       title="previous chapter">← DiffBlocks</a>
+  </li>
+  <li class="next">
+    <a href="biotools.html"
+       title="next chapter">Biotools →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="module-geneblocks.sequence_modification_utils">
+<span id="sequence-modifications-utils"></span><h1>Sequence modifications utils<a class="headerlink" href="#module-geneblocks.sequence_modification_utils" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="geneblocks.sequence_modification_utils.change">
+<code class="sig-prename descclassname">geneblocks.sequence_modification_utils.</code><code class="sig-name descname">change</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">start</em>, <em class="sig-param">end</em>, <em class="sig-param">change</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/sequence_modification_utils.html#change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.sequence_modification_utils.change" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sequence with <code class="docutils literal notranslate"><span class="pre">seq[start:end]</span></code> replaced by <code class="docutils literal notranslate"><span class="pre">change</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geneblocks.sequence_modification_utils.copy">
+<code class="sig-prename descclassname">geneblocks.sequence_modification_utils.</code><code class="sig-name descname">copy</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">start</em>, <em class="sig-param">end</em>, <em class="sig-param">new_start</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/sequence_modification_utils.html#copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.sequence_modification_utils.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sequence with segment [start, end] also copied elsewhere,
+starting in new_start.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geneblocks.sequence_modification_utils.delete">
+<code class="sig-prename descclassname">geneblocks.sequence_modification_utils.</code><code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">pos</em>, <em class="sig-param">deletions</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/sequence_modification_utils.html#delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.sequence_modification_utils.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sequence with a number of deletions from position pos.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geneblocks.sequence_modification_utils.insert">
+<code class="sig-prename descclassname">geneblocks.sequence_modification_utils.</code><code class="sig-name descname">insert</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">pos</em>, <em class="sig-param">inserted</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/sequence_modification_utils.html#insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.sequence_modification_utils.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sequence with <code class="docutils literal notranslate"><span class="pre">inserted</span></code> inserted, starting at index ‘pos’</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geneblocks.sequence_modification_utils.move">
+<code class="sig-prename descclassname">geneblocks.sequence_modification_utils.</code><code class="sig-name descname">move</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">start</em>, <em class="sig-param">end</em>, <em class="sig-param">diff</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/sequence_modification_utils.html#move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.sequence_modification_utils.move" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move a subsequence by “diff” nucleotides the left or the right.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geneblocks.sequence_modification_utils.reverse">
+<code class="sig-prename descclassname">geneblocks.sequence_modification_utils.</code><code class="sig-name descname">reverse</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">start</em>, <em class="sig-param">end</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/sequence_modification_utils.html#reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.sequence_modification_utils.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sequence with segment seq[start:end] reverse-complemented.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geneblocks.sequence_modification_utils.swap">
+<code class="sig-prename descclassname">geneblocks.sequence_modification_utils.</code><code class="sig-name descname">swap</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">pos1</em>, <em class="sig-param">pos2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/sequence_modification_utils.html#swap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.sequence_modification_utils.swap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new sequence with segments at position pos1 and pos2 swapped.</p>
+<p>pos1, pos2 are both of the form (start1, end1), (start2, end2)</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="DiffBlocks.html"
+       title="previous chapter">← DiffBlocks</a>
+  </li>
+  <li class="next">
+    <a href="biotools.html"
+       title="next chapter">Biotools →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

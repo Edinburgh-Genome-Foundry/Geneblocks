@@ -20,24 +20,23 @@ from .commonblocks_tools import (
 
 
 class CommonBlocks:
-    """CommonBlocks.
+    """Class to represent a set of common blocks from different sequences.
+
+    Create with ``CommonBlocks.from_sequences``:
+
+    >>> common_blocks = CommonBlocks.from_sequences({'s1': 'ATGC...'})
 
     Parameters
     ----------
 
-    sequences
+    common_blocks
       A dictionnary of the sequences to compare, of the form
       {sequence_name: ATGC_sequence_string} or a list of records, all with
       different IDs.
 
-    blocks_selection
-      Either 'most_coverage_first' or 'larger_first'. If 'larger_first', the
-      largest blocks (in number of nucleotides). If 'most_coverage_first',
-      we pick first the blocks whose size times number of occurences is larger
-
-    min_block_size
-      Blocks with a size below this threshold will be ignored and the blocks
-      search stops when all blocks are below this threshold.
+    records
+      A dictionnary of the biopython records of the sequences
+      {record_id: record}
     """
 
     def __init__(self, common_blocks, records):
@@ -67,6 +66,13 @@ class CommonBlocks:
         return CommonBlocks(common_blocks=common_blocks, records=records_dict)
 
     def compute_unique_blocks(self):
+        """Return a dictionnary listing unique blocks by sequence.
+
+        The unique blocks are the blocks between the selected common blocks.
+
+        The result is of the form {seq: [(start, end), (start2, end2), ...]}
+        """
+
         unique_blocks = OrderedDict()
         for seqname, rec in self.sequences_with_annotated_blocks().items():
             blocks_locations = (

@@ -33,6 +33,24 @@ class DiffBlocks:
 
     @staticmethod
     def from_sequences(s1, s2, blast_over=500, max_complexity=1e8):
+        """Create DiffBlocks by comparing two sequences
+        
+        Parameters
+        ----------
+
+        s1, s2
+          Two sequences, either "ATGC..." strings or Biopython records.
+
+        blast_over
+          A blast will be triggered to accelerate homology finding if
+          len(s1) + len(s2) > blast_over.
+        
+        max_complexity
+          If len(s1) * len(s2) is over max_complexity, no analysis is done and
+          s1 is just labeled as a "change" of s2 (useful internally during the
+          recursions of this method)
+        
+        """
         # Note: the sequences will always be upperized before they are
         # compared. however we also need to keep the initial sequences to
         # create the final blocks (possibly with upper/lowercase nucleotides)
@@ -127,11 +145,6 @@ class DiffBlocks:
             sorted_blocks = compute_sorted_blocks(diffblocks + remarks)
             return DiffBlocks(s1, s2, sorted_blocks)
 
-        # upper_s1, upper_s2 = s1.upper(), s2.upper()
-        # matcher = SequenceMatcher(a=upper_s1, b=upper_s2, autojunk=False)
-        # ratio = matcher.quick_ratio()
-        # if (max(len(s1), len(s2)) * (1.0 - ratio)) > use_junk_over:
-        #     matcher = SequenceMatcher(a=upper_s1, b=upper_s2, autojunk=True)
         s1_std = str(s1.seq if hasattr(s1, "seq") else s1).upper()
         s2_std = str(s2.seq if hasattr(s2, "seq") else s2).upper()
         levenshtein_blocks = compute_levenshtein_blocks(
@@ -204,7 +217,8 @@ class DiffBlocks:
                 fig = ax1.figure
             else:
                 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(width, 6))
-            _, stats1 = gr_record.plot(ax=ax1, annotate_inline=True, **plot_kw)
+            plot_kw['annotate_inline'] = plot_kw.get('annotate_inline', True)
+            _, stats1 = gr_record.plot(ax=ax1, **plot_kw)
             _, stats2 = gr_diffrecord.plot(ax=ax2, with_ruler=False, **plot_kw)
             max_level_1 = max(
                 [0] + [v["annotation_y"] for v in stats1[1].values()]
@@ -228,7 +242,7 @@ class DiffBlocks:
                 ax1 = fig.add_subplot(gs[:max_level_1])
                 ax2 = fig.add_subplot(gs[max_level_1:])
                 _, stats1 = gr_record.plot(
-                    ax=ax1, annotate_inline=True, **plot_kw
+                    ax=ax1, **plot_kw
                 )
                 _, stats2 = gr_diffrecord.plot(
                     ax=ax2, with_ruler=False, **plot_kw

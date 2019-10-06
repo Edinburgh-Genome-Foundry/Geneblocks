@@ -7,13 +7,14 @@ from ..Location import Location
 
 from .DiffBlock import DiffBlock
 
+
 def compute_levenshtein_blocks(seq1, seq2, max_complexity=1e8):
     """Compute the Levenshtein blocks of insertion, deletion, replacement.
     """
     # TODO: better method for dealing with long sequences?
     l1, l2 = len(seq1), len(seq2)
     if l1 * l2 > max_complexity:
-        return [('change', (0, l1), (0, l2))]
+        return [("change", (0, l1), (0, l2))]
 
     def block_format(op, s1, e1, s2, e2):
         if op == "delete":
@@ -82,19 +83,24 @@ def merge_blocs_by_location(blocks, max_blocks, max_span, reference="s2"):
     return blocks
 
 
-def merge_successive_blocks(blocks, change_gap=10, reference="s2"):
+def merge_successive_blocks(
+    blocks, change_gap=10, replace_gap=5, reference="s2"
+):
     while 1:
         for i in range(len(blocks) - 1):
             b1, b2 = blocks[i], blocks[i + 1]
-            if "equal" in [b1.operation, b2.operation]:
-                continue
-            if "change" not in [b1.operation, b2.operation]:
-                continue
+            operations = (b1.operation, b2.operation)
             if reference == "s2":
                 gap = b2.s2_location.start - b1.s2_location.end
             else:
                 gap = b2.s1_location.start - b1.s1_location.end
-            if gap < change_gap:
+            if "equal" in operations:
+                continue
+            if "change" in operations and (gap < change_gap):
+                new_block = merge_subblocks([b1, b2])
+                blocks = blocks[:i] + [new_block] + blocks[i + 2 :]
+                break
+            if operations == ("replace", "replace") and gap < replace_gap:
                 new_block = merge_subblocks([b1, b2])
                 blocks = blocks[:i] + [new_block] + blocks[i + 2 :]
                 break

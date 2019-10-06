@@ -52,9 +52,14 @@ master_doc = "index"
 project = u"Geneblocks"
 copyright = u"2019, Edinburgh Genome Foundry"
 
-html_context = {
-    "github_link": "https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+html_theme_options = {
+    "external_links": [
+        ('Github', "https://github.com/Edinburgh-Genome-Foundry/geneblocks")
+    ]
 }
+
+html_css_files = ["css/custom.css"]
+
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -122,12 +127,8 @@ exclude_patterns = ["_build"]
 #       ],
 #     }
 html_theme = "press"
+html_favicon = 'favicon.png'
 
-html_css_files = ["css/press_main.css"]
-
-
-def setup(app):
-    app.add_stylesheet("css/press_main.css")
 
 
 # sys.path.append(os.path.abspath('_themes'))

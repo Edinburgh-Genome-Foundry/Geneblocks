@@ -3,6 +3,7 @@ from dna_features_viewer import BiopythonTranslator
 class DiffRecordTranslator(BiopythonTranslator):
 
     ignored_features_types = ("diff_equal",)
+    default_box_color = None
 
     @staticmethod
     def compute_feature_color(f):
@@ -21,4 +22,4 @@ class DiffRecordTranslator(BiopythonTranslator):
 
     @staticmethod
     def compute_feature_fontdict(f):
-        return {"fontsize": 12 if f.type.startswith("diff_") else 7}
+        return {"fontsize": 12 if f.type.startswith("diff_") else 9}

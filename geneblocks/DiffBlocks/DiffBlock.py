@@ -52,7 +52,7 @@ class DiffBlock:
                 sub_s1 = self.s1_location.extract_sequence()
                 sub_s2 = self.s2_location.extract_sequence()
                 diffs = sequences_differences(sub_s1, sub_s2)
-                label = "%d/%dn replaced" % (diffs, s1_length)
+                label = "%d mutations" % diffs
 
         elif self.operation == "change":
             if max([s1_length, s2_length]) <= 6:

@@ -4,7 +4,7 @@ from collections import OrderedDict
 from copy import deepcopy
 
 
-from dna_features_viewer import BiopythonTranslator
+from .CommonBlocksRecordTranslator import CommonBlocksRecordTranslator
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
@@ -208,7 +208,7 @@ class CommonBlocks:
           Height of each plot
         """
 
-        translator = BiopythonTranslator()
+        translator = CommonBlocksRecordTranslator()
         records = self.sequences_with_annotated_blocks(colors=colors)
         if axes is None:
             fig, axes = plt.subplots(
@@ -227,8 +227,9 @@ class CommonBlocks:
                 x_lim=(0, max([len(rec) for rec in self.records.values()])),
                 with_ruler=(ax == axes[-1]),
             )
+            ax.set_ylim(top=ax.get_ylim()[1] + 1)
             ax.set_title(seqname, loc="left", fontdict=dict(weight="bold"))
-        fig.tight_layout()
+        # fig.tight_layout()
         return axes
 
     def copy_features_between_common_blocks(self, inplace=False):

@@ -160,7 +160,13 @@ class DiffBlocks:
         ]
         return DiffBlocks(s1, s2, blocks)
 
-    def merged(self, blocks_per_span=(3, 600), change_gap=100, reference="s2"):
+    def merged(
+        self,
+        blocks_per_span=(3, 600),
+        change_gap=100,
+        replace_gap=10,
+        reference="s2",
+    ):
         blocks = [
             b
             for b in self.blocks
@@ -179,7 +185,10 @@ class DiffBlocks:
             )
         if change_gap is not None:
             blocks = merge_successive_blocks(
-                blocks=blocks, change_gap=change_gap, reference="s2"
+                blocks=blocks,
+                change_gap=change_gap,
+                replace_gap=replace_gap,
+                reference="s2",
             )
         blocks = compute_sorted_blocks(blocks + remarks)
         return DiffBlocks(s1=self.s1, s2=self.s2, blocks=blocks)
@@ -217,18 +226,19 @@ class DiffBlocks:
                 fig = ax1.figure
             else:
                 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(width, 6))
-            plot_kw['annotate_inline'] = plot_kw.get('annotate_inline', True)
+            plot_kw["annotate_inline"] = plot_kw.get("annotate_inline", True)
             _, stats1 = gr_record.plot(ax=ax1, **plot_kw)
             _, stats2 = gr_diffrecord.plot(ax=ax2, with_ruler=False, **plot_kw)
             max_features_1 = gr_record.feature_level_height * max(
                 [0] + [v for v in stats1[0].values()]
             )
             max_level_1 = max(
-                [max_features_1] + [v["annotation_y"] for v in stats1[1].values()]
+                [max_features_1]
+                + [v["annotation_y"] for v in stats1[1].values()]
             )
-            max_level_2 = max(
-                [0] + [v["annotation_y"] for v in stats2[1].values()]
-            ) + 1
+            max_level_2 = (
+                max([1] + [v["annotation_y"] for v in stats2[1].values()]) + 2
+            )
             # print (stats2)
             n_levels = max_level_1 + max_level_2
             if max_level_1 and max_level_2:
@@ -240,18 +250,15 @@ class DiffBlocks:
                 fig = plt.figure(
                     figsize=(width, 1 + 0.4 * n_levels), facecolor="w"
                 )
-                ax1 = fig.add_subplot(gs[:max_level_1 + easing])
-                ax2 = fig.add_subplot(gs[max_level_1 + easing:])
-                _, stats1 = gr_record.plot(
-                    ax=ax1, **plot_kw
-                )
+                ax1 = fig.add_subplot(gs[: max_level_1 + easing])
+                ax2 = fig.add_subplot(gs[max_level_1 + easing :])
+                _, stats1 = gr_record.plot(ax=ax1, **plot_kw)
                 _, stats2 = gr_diffrecord.plot(
                     ax=ax2, with_ruler=False, **plot_kw
                 )
-            
 
-            # fig.set_size_inches((width, 3 + 0.6 * n_levels))
-            ax2.set_ylim(bottom=-1)
+            # fig.set_size_inches((width, 3 + 0.4 * n_levels))
+            ax2.set_ylim(bottom=-2)
             ax2.invert_yaxis()
             for f in gr_diffrecord.features:
                 ax1.fill_between(

@@ -227,7 +227,7 @@ class CommonBlocks:
                 x_lim=(0, max([len(rec) for rec in self.records.values()])),
                 with_ruler=(ax == axes[-1]),
             )
-            ax.set_ylim(top=ax.get_ylim()[1] + 1)
+            ax.set_ylim(top=ax.get_ylim()[1])
             ax.set_title(seqname, loc="left", fontdict=dict(weight="bold"))
         # fig.tight_layout()
         return axes

@@ -2,6 +2,7 @@ from copy import deepcopy
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import numpy as np
 
 from ..Location import Location
 from ..biotools import sequence_to_record
@@ -239,6 +240,8 @@ class DiffBlocks:
             max_level_2 = (
                 max([1] + [v["annotation_y"] for v in stats2[1].values()]) + 2
             )
+            max_level_1 = int(np.round(max_level_1))
+            max_level_2 = int(np.round(max_level_2))
             # print (stats2)
             n_levels = max_level_1 + max_level_2
             if max_level_1 and max_level_2:
@@ -248,7 +251,7 @@ class DiffBlocks:
                 easing = 3
                 gs = gridspec.GridSpec(n_levels + 2 * easing, 1)
                 fig = plt.figure(
-                    figsize=(width, 1 + 0.4 * n_levels), facecolor="w"
+                    figsize=(width, 1 + 0.5 * n_levels), facecolor="w"
                 )
                 ax1 = fig.add_subplot(gs[: max_level_1 + easing])
                 ax2 = fig.add_subplot(gs[max_level_1 + easing :])

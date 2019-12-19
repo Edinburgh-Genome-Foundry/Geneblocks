@@ -23,7 +23,7 @@ annotated_plasmid = new_records["plasmid"]  # record with all features
 # PLOT ALL RECORDS
 
 
-fig, (ax0, ax1, ax2) = plt.subplots(3, 1, sharex=True, figsize=(7, 9))
+fig, (ax0, ax1, ax2) = plt.subplots(3, 1, sharex=True, figsize=(7, 5))
 ax0.set_title("Record 1: Annotated part", loc="left")
 ax1.set_title("Record 2: Partially annotated plasmid", loc="left")
 ax2.set_title("Record 2 (after) with all annotations", loc="left")
@@ -42,4 +42,5 @@ tr.translate_record(annotated_plasmid).plot(ax2, with_ruler=False)
 
 fig.tight_layout()
 fig.subplots_adjust(hspace=0.6)
+
 fig.savefig("features_transfer.png", dpi=125)

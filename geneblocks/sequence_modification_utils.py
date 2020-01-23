@@ -1,3 +1,5 @@
+"""These methods are only useful to build examples and tests for Geneblocks."""
+
 from .biotools import reverse_complement
 
 

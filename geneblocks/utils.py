@@ -29,6 +29,8 @@ def sequences_are_circularly_equal(sequences):
         first_equal = sequences_are_circularly_equal(sequences[:2])
         return first_equal and sequences_are_circularly_equal(sequences[1:])
     s1, s2 = sequences[:2]
+    if s1.id == s2.id:
+        s1.id += "_b"
     if len(s1) != len(s2):
         return False
     blocks = CommonBlocks.from_sequences(sequences=[s1, s2], min_block_size=2)

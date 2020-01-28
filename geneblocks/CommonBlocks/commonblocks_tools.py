@@ -149,7 +149,7 @@ def find_homologies_between_sequences(
             "-dust",
             "no",
             "-evalue",
-            "100000000000",
+            "1000000000000000",
             "-culling_limit",
             "10",
             "-ungapped",

@@ -32,16 +32,18 @@ def sequences_are_circularly_equal(sequences):
     if len(s1) != len(s2):
         return False
     blocks = CommonBlocks.from_sequences(sequences=[s1, s2], min_block_size=2)
-    if len(blocks.unique_blocks_records()):
+    if len(blocks.common_blocks) > 2:
         return False
-    if len(blocks.common_blocks) != 2:
-        return False
-
-    # One last check to be sure
-    common_sequences = [
-        block["sequence"] for name, block in blocks.common_blocks.items()
+    potential_pivot_indices =  [
+        index
+        for data in blocks.common_blocks.values()
+        for (origin, (start, end, _)) in data['locations']
+        for index in [start, end]
     ]
-    total_common_length = sum([len(seq) for seq in common_sequences])
-    print(total_common_length, len(s1))
-    return total_common_length == len(s1)
+    s1, s2 = str(s1.seq), str(s2.seq)
+    for index in potential_pivot_indices:
+        new_s1 = s1[index:] + s1[:index]
+        if new_s1 == s2:
+            return True
+    return False
 

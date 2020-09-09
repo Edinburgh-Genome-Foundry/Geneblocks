@@ -1,5 +1,6 @@
 from dna_features_viewer import BiopythonTranslator
 
+
 class CommonBlocksRecordTranslator(BiopythonTranslator):
 
     ignored_features_types = ("diff_equal",)

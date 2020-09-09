@@ -34,8 +34,8 @@ class DiffBlocks:
 
     @staticmethod
     def from_sequences(s1, s2, blast_over=500, max_complexity=1e8):
-        """Create DiffBlocks by comparing two sequences
-        
+        """Create DiffBlocks by comparing two sequences.
+
         Parameters
         ----------
 
@@ -45,12 +45,11 @@ class DiffBlocks:
         blast_over
           A blast will be triggered to accelerate homology finding if
           len(s1) + len(s2) > blast_over.
-        
+
         max_complexity
           If len(s1) * len(s2) is over max_complexity, no analysis is done and
           s1 is just labeled as a "change" of s2 (useful internally during the
-          recursions of this method)
-        
+          recursions of this method).
         """
         # Note: the sequences will always be upperized before they are
         # compared. however we also need to keep the initial sequences to
@@ -113,12 +112,8 @@ class DiffBlocks:
                     subdiffblocks = [
                         DiffBlock(
                             "delete",
-                            s1_location=Location(
-                                end1, next_start1, sequence=s1
-                            ),
-                            s2_location=Location(
-                                next_start2, next_start2, sequence=s2
-                            ),
+                            s1_location=Location(end1, next_start1, sequence=s1),
+                            s2_location=Location(next_start2, next_start2, sequence=s2),
                         )
                     ]
                 else:
@@ -139,9 +134,7 @@ class DiffBlocks:
                         block.s2_location.sequence = s2
                 diffblocks += subdiffblocks.blocks
             diffblocks = [
-                b
-                for b in diffblocks
-                if len(b.s1_location) or len(b.s2_location)
+                b for b in diffblocks if len(b.s1_location) or len(b.s2_location)
             ]
             sorted_blocks = compute_sorted_blocks(diffblocks + remarks)
             return DiffBlocks(s1, s2, sorted_blocks)
@@ -162,20 +155,10 @@ class DiffBlocks:
         return DiffBlocks(s1, s2, blocks)
 
     def merged(
-        self,
-        blocks_per_span=(3, 600),
-        change_gap=100,
-        replace_gap=10,
-        reference="s2",
+        self, blocks_per_span=(3, 600), change_gap=100, replace_gap=10, reference="s2",
     ):
-        blocks = [
-            b
-            for b in self.blocks
-            if b.operation not in ["reverse", "transpose"]
-        ]
-        remarks = [
-            b for b in self.blocks if b.operation in ["reverse", "transpose"]
-        ]
+        blocks = [b for b in self.blocks if b.operation not in ["reverse", "transpose"]]
+        remarks = [b for b in self.blocks if b.operation in ["reverse", "transpose"]]
         if blocks_per_span is not None:
             max_blocks, span = blocks_per_span
             blocks = merge_blocs_by_location(
@@ -201,11 +184,7 @@ class DiffBlocks:
         return [block.to_feature(sequence=sequence) for block in self.blocks]
 
     def plot(
-        self,
-        translator_class="default",
-        separate_axes=True,
-        sequence="s2",
-        **plot_kw
+        self, translator_class="default", separate_axes=True, sequence="s2", **plot_kw
     ):
 
         if translator_class == "default":
@@ -234,12 +213,9 @@ class DiffBlocks:
                 [0] + [v for v in stats1[0].values()]
             )
             max_level_1 = max(
-                [max_features_1]
-                + [v["annotation_y"] for v in stats1[1].values()]
+                [max_features_1] + [v["annotation_y"] for v in stats1[1].values()]
             )
-            max_level_2 = (
-                max([1] + [v["annotation_y"] for v in stats2[1].values()]) + 2
-            )
+            max_level_2 = max([1] + [v["annotation_y"] for v in stats2[1].values()]) + 2
             max_level_1 = int(np.round(max_level_1))
             max_level_2 = int(np.round(max_level_2))
             # print (stats2)
@@ -250,15 +226,11 @@ class DiffBlocks:
                 ##
                 easing = 3
                 gs = gridspec.GridSpec(n_levels + 2 * easing, 1)
-                fig = plt.figure(
-                    figsize=(width, 1 + 0.5 * n_levels), facecolor="w"
-                )
+                fig = plt.figure(figsize=(width, 1 + 0.5 * n_levels), facecolor="w")
                 ax1 = fig.add_subplot(gs[: max_level_1 + easing])
                 ax2 = fig.add_subplot(gs[max_level_1 + easing :])
                 _, stats1 = gr_record.plot(ax=ax1, **plot_kw)
-                _, stats2 = gr_diffrecord.plot(
-                    ax=ax2, with_ruler=False, **plot_kw
-                )
+                _, stats2 = gr_diffrecord.plot(ax=ax2, with_ruler=False, **plot_kw)
 
             # fig.set_size_inches((width, 3 + 0.4 * n_levels))
             ax2.set_ylim(bottom=-2)

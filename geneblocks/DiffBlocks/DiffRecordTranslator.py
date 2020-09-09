@@ -1,5 +1,6 @@
 from dna_features_viewer import BiopythonTranslator
 
+
 class DiffRecordTranslator(BiopythonTranslator):
 
     ignored_features_types = ("diff_equal",)

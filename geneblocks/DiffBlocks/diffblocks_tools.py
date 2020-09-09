@@ -83,9 +83,7 @@ def merge_blocs_by_location(blocks, max_blocks, max_span, reference="s2"):
     return blocks
 
 
-def merge_successive_blocks(
-    blocks, change_gap=10, replace_gap=5, reference="s2"
-):
+def merge_successive_blocks(blocks, change_gap=10, replace_gap=5, reference="s2"):
     while 1:
         for i in range(len(blocks) - 1):
             b1, b2 = blocks[i], blocks[i + 1]
@@ -123,7 +121,7 @@ def get_optimal_common_blocks(common_blocks):
     common_blocks = deepcopy(common_blocks)
     remarks = []
 
-    # Make so that there is never an anitsense block in s1 and a + block in s2.
+    # Make so that there is never an antisense block in s1 and a + block in s2.
     # If it is so, flip the block in s2. It will become antisense and be later
     # removed
     for block_name, data in common_blocks.items():
@@ -195,13 +193,11 @@ def get_optimal_common_blocks(common_blocks):
             while block_name in seen_blocks:
                 block_name = block_name + "*"
             blocks_list[i] = start, end, block_name
-            blocks_in_seqs_dicts[seq][block_name] = dict(
-                rank=i, location=(start, end)
-            )
+            blocks_in_seqs_dicts[seq][block_name] = dict(rank=i, location=(start, end))
             seen_blocks.add(block_name)
 
-    # Find and retain the largest sequence of blocks which is in the right order
-    # in both sequences. We will remove every other blocks.
+    # Find and retain the largest sequence of blocks which is in the right
+    # order in both sequences. We will remove every other block.
     # We do that by looking for the longest path in a graph
 
     if len(blocks_in_seqs_dicts["s2"]) < 2:
@@ -261,9 +257,7 @@ def get_optimal_common_blocks(common_blocks):
             if diff > 0:
                 if block_name1 not in blocks_to_reduce:
                     blocks_to_reduce[block_name1] = 0
-                blocks_to_reduce[block_name1] = max(
-                    blocks_to_reduce[block_name1], diff
-                )
+                blocks_to_reduce[block_name1] = max(blocks_to_reduce[block_name1], diff)
 
     for seq in ("s1", "s2"):
         blocks_list = blocks_in_seqs[seq]

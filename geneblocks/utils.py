@@ -11,7 +11,7 @@ def _turn_sequence_into_record_if_necessary(sequence, record_id="id"):
 
 def sequences_are_circularly_equal(sequences):
     """Return whether all the sequences represent the same circular sequence.
-    
+
     This means that the sequences are differently rotated versions of a same
     circular sequence, and for any pair s1, s2 in the sequences, there is an
     index i such that s1 = s2[i:] + s2[:i].
@@ -36,10 +36,10 @@ def sequences_are_circularly_equal(sequences):
     blocks = CommonBlocks.from_sequences(sequences=[s1, s2], min_block_size=2)
     if len(blocks.common_blocks) > 2:
         return False
-    potential_pivot_indices =  [
+    potential_pivot_indices = [
         index
         for data in blocks.common_blocks.values()
-        for (origin, (start, end, _)) in data['locations']
+        for (origin, (start, end, _)) in data["locations"]
         for index in [start, end]
     ]
     s1, s2 = str(s1.seq), str(s2.seq)
@@ -48,4 +48,3 @@ def sequences_are_circularly_equal(sequences):
         if new_s1 == s2:
             return True
     return False
-

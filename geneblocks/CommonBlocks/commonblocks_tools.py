@@ -16,9 +16,9 @@ from ..biotools import reverse_complement, sequence_to_record
 
 def format_sequences_as_dicts(sequences):
     """Standardize different formats into a single one.
-    
-    
-    The ``sequences`` can bei either:
+
+
+    The ``sequences`` can be either:
     - A list [('sequence_id', 'ATGC...'), ('sequence_2', ...)]
     - A list of Biopython records (all with different IDs)
     - A dict {'sequence_id': "ATGC..."}
@@ -31,9 +31,7 @@ def format_sequences_as_dicts(sequences):
     if isinstance(sequences, (list, tuple)):
         if hasattr(sequences[0], "seq"):
             # SEQUENCES = LIST OF RECORDS
-            records_dict = OrderedDict(
-                [(record.id, record) for record in sequences]
-            )
+            records_dict = OrderedDict([(record.id, record) for record in sequences])
             sequences_dict = OrderedDict(
                 [(record.id, str(record.seq).upper()) for record in sequences]
             )
@@ -74,7 +72,7 @@ def segments_difference(segment, subtracted):
     """Return the difference between segment (start, end) and subtracted.
 
     The result is a list containing either zero, one, or two segments of the
-    form (start, end)
+    form (start, end).
 
     Examples
     --------
@@ -83,8 +81,6 @@ def segments_difference(segment, subtracted):
     >>> segment=(10, 100), subtracted=(40, 125) => [(10, 40)]
     >>> segment=(10, 100), subtracted=(30, 55) => [(10, 30), (55, 100)]
     >>> segment=(10, 100), subtracted=(0, 150) => []
-    
-    
     """
     seg_start, seg_end = segment
     sub_start, sub_end = subtracted
@@ -102,8 +98,8 @@ def find_homologies_between_sequences(
     """Return a dict listing the locations of all homologies between sequences.
 
     The result is a dict of the form below, where the sequence identifiers
-    are used as keys
-    
+    are used as keys.
+
     >>> {
     >>>     'seq_1': {
     >>>        (start1, end1): [('seq2_5', _start, _end), ('seq_3', )...]
@@ -115,13 +111,13 @@ def find_homologies_between_sequences(
     ----------
 
     sequences
-      A dict {'sequence_id': 'ATTGTGCAG...'}
-    
+      A dict {'sequence_id': 'ATTGTGCAG...'}.
+
     min_size, max_size
       Minimum and maximum size outside which homologies will be ignored.
-    
+
     include_self_homologies
-      If False, self-homologies will be removed from the list
+      If False, self-homologies will be removed from the list.
     """
 
     # BLAST THE SEQUENCES USING NCBI-BLAST
@@ -131,10 +127,7 @@ def find_homologies_between_sequences(
     with open(temp_fasta_path, "w+") as f:
         f.write(
             "\n\n".join(
-                [
-                    "> %s\n%s" % (name, seq.upper())
-                    for name, seq in sequences.items()
-                ]
+                ["> %s\n%s" % (name, seq.upper()) for name, seq in sequences.items()]
             )
         )
     proc = subprocess.Popen(
@@ -163,12 +156,8 @@ def find_homologies_between_sequences(
 
     # PARSE THE RESULT FROM BLAST
 
-    parsing = [
-        line.split("\t") for line in result.decode("utf-8").splitlines()
-    ]
-    homologies = {
-        name: defaultdict(lambda *a: []) for name, seq in sequences.items()
-    }
+    parsing = [line.split("\t") for line in result.decode("utf-8").splitlines()]
+    homologies = {name: defaultdict(lambda *a: []) for name, seq in sequences.items()}
 
     # FILTER THE RESULTS (MIN_SIZE, MAX_SIZE, SELF-HOMOLOGIES)
 
@@ -188,7 +177,7 @@ def find_homologies_between_sequences(
 
 
 def count_homologies(matches, min_size):
-    """Return a dict {(start, end): number_of_homologies_count}
+    """Return a dict {(start, end): number_of_homologies_count}.
     """
     homologies_counts = {}
     if len(matches) == 1:
@@ -201,9 +190,7 @@ def count_homologies(matches, min_size):
             if end < start:
                 # The segment is empty, match1 and match2 as disjunct.
                 break
-            elif (end - start > min_size) and (
-                segment not in homologies_counts
-            ):
+            elif (end - start > min_size) and (segment not in homologies_counts):
                 homologies_counts[segment] = len(
                     [
                         matching
@@ -215,9 +202,7 @@ def count_homologies(matches, min_size):
     return homologies_counts
 
 
-def segment_with_most_homologies(
-    homologies_counts, method="most_coverage_first"
-):
+def segment_with_most_homologies(homologies_counts, method="most_coverage_first"):
     """Select the "best" segment, that should be selected next as a common
     block."""
 
@@ -241,14 +226,12 @@ def select_common_blocks(
     """Select a collection of the largest common blocks, iteratively."""
     common_blocks = []
     homologies_counts = {
-        seqname: count_homologies(
-            matches=homologies[seqname], min_size=min_size
-        )
+        seqname: count_homologies(matches=homologies[seqname], min_size=min_size)
         for seqname in sequences
     }
 
     # ITERATIVELY SELECT A COMMON BLOCK AND REMOVE THAT BLOCK FROM THE
-    # homologies IN VARIOUS SEQUENCES, UNTIL THERE IS NO
+    # homologies IN VARIOUS SEQUENCES, UNTIL THERE IS NO HOMOLOGY
 
     while True:
 
@@ -299,9 +282,7 @@ def select_common_blocks(
                     match_as_segment = tuple(sorted([start, end]))
                     for intersection in list(seq_n_intersections.keys()):
                         score = seq_n_intersections.pop(intersection)
-                        for diff in segments_difference(
-                            intersection, match_as_segment
-                        ):
+                        for diff in segments_difference(intersection, match_as_segment):
                             diff_start, diff_end = diff
                             if diff_end - diff_start > min_size:
                                 seq_n_intersections[diff] = score
@@ -310,9 +291,7 @@ def select_common_blocks(
     # REMOVE SELF-HOMOLOGOUS SEQUENCES
 
     common_blocks = [
-        (seq, locations)
-        for (seq, locations) in common_blocks
-        if len(locations) >= 2
+        (seq, locations) for (seq, locations) in common_blocks if len(locations) >= 2
     ]
 
     # CREATE THE FINAL COMMON_BLOCKS_DICT

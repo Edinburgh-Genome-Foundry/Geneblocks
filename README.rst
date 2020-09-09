@@ -1,12 +1,12 @@
 .. raw:: html
 
     <p align="center">
-    <img alt="DNA Chisel Logo" title="DNA Chisel" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Geneblocks/master/docs/_static/images/title.png" width="450">
+    <img alt="Geneblocks Logo" title="Geneblocks" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Geneblocks/master/docs/_static/images/title.png" width="450">
     <br /><br />
     </p>
 
 GeneBlocks
-===========
+==========
 
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks
@@ -15,10 +15,10 @@ GeneBlocks
 .. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/Geneblocks/badge.svg
   :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/Geneblocks
 
-GeneBlocks is a Python library to compare DNA sequences. It can be used to:
+GeneBlocks is a Python library for comparing DNA sequences. It can be used to:
 
-- Find common blocks in a group of DNA sequences, to factorize them (e.g. only analyze or synthetize each common block once)
-- Highlight differences between sequences (insertions, deletions, mutations)
+- Find common blocks in a group of DNA sequences, to factorize them (e.g. only analyze or synthetize each common block once).
+- Highlight differences between sequences (insertions, deletions, mutations).
 - Transfer Genbank features from one record to another sharing similar subsequences.
 
 At the Edinburgh Genome Foundry, we use GeneBlocks to optimize sequence assembly, explore sets of non-annotated sequences, or visualize the differences
@@ -34,7 +34,7 @@ Live demos
 `Transfer Genbank features between records <https://cuba.genomefoundry.org/transfer-features>`_
 
 Installation
--------------
+------------
 
 The CommonBlocks feature requires NCBI BLAST+. On Ubuntu, install it with
 
@@ -43,13 +43,13 @@ The CommonBlocks feature requires NCBI BLAST+. On Ubuntu, install it with
     (sudo) apt-get install ncbi-blast+
 
 
-You can install GeneBlocks through PIP
+You can install GeneBlocks through PIP:
 
 .. code:: shell
 
     (sudo) pip install geneblocks
 
-Alternatively, you can unzip the sources in a folder and type
+Alternatively, you can unzip the sources in a folder and type:
 
 .. code:: shell
 
@@ -57,7 +57,7 @@ Alternatively, you can unzip the sources in a folder and type
 
 
 Usage
-------
+-----
 
 
 Finding common blocks in a set of sequences:
@@ -67,8 +67,8 @@ Finding common blocks in a set of sequences:
 
     from geneblocks import CommonBlocks
 
-    # Input sequences are in a dictionnary as follows:
-    sequences = {'seq1': 'ATTTGCGT...', 'seq2': 'ATGCCCGCACG...', ...}
+    # Input sequences are in a dictionary as follows:
+    sequences = {'seq1': 'ATTTGCGT', 'seq2': 'ATGCCCGCACG',}  # etc
 
     common_blocks = CommonBlocks.from_sequences(sequences)
 
@@ -89,13 +89,13 @@ Result:
    <img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/common_blocks.png'
     width='600px'/>
 
-Transfering features between genbank records:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Transferring features between genbank records:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this snippet we assume that we have two genbank records:
 
 - A record of an annotated part, containing an expression module.
-- A record of a plasmid which contains the part but the part was not properly annotated
+- A record of a plasmid which contains the part but the part was not properly annotated.
 
 We will use Geneblocks to automatically detect where the part is located in
 the plasmid and automatically copy the features from the part record to the
@@ -181,9 +181,9 @@ of modifications brought to the second sequence:
       width='700px'/>
 
 Licence
---------
+-------
 
 Geneblocks is an open-source software originally written at the `Edinburgh Genome Foundry
 <http://www.genomefoundry.org>`_ by `Zulko <https://github.com/Zulko>`_
-and `released on Github <https://github.com/Edinburgh-Genome-Foundry/Geneblocks>`_ under the MIT licence (copyright Edinburgh Genome Foundry).
-Everyone is welcome to contribute !
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/Geneblocks>`_ under the MIT licence (Copyright 2017 Edinburgh Genome Foundry).
+Everyone is welcome to contribute!

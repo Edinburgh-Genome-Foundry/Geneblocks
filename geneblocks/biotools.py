@@ -6,13 +6,22 @@ import numpy as np
 try:
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord
-    from Bio.Alphabet import DNAAlphabet
     from Bio.SeqFeature import SeqFeature, FeatureLocation
     from Bio import SeqIO
 
     BIOPYTHON_AVAILABLE = True
 except ImportError:
     BIOPYTHON_AVAILABLE = False
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
+
 
 complements_dict = {"A": "T", "T": "A", "C": "G", "G": "C"}
 
@@ -71,12 +80,15 @@ def reverse_complement(sequence):
 def sequence_to_record(sequence, record_id=None, name="unnamed", features=()):
     if not BIOPYTHON_AVAILABLE:
         raise ImportError("Creating records requires Biopython installed.")
-    return SeqRecord(
-        Seq(sequence, alphabet=DNAAlphabet()),
-        name=name,
-        id=record_id,
-        features=list(features),
-    )
+    if has_dna_alphabet:  # Biopython <1.78
+        sequence = Seq(sequence, alphabet=DNAAlphabet())
+    else:
+        sequence = Seq(sequence)
+
+    seqrecord = SeqRecord(sequence, name=name, id=record_id, features=list(features),)
+    seqrecord.annotations["molecule_type"] = "DNA"
+
+    return seqrecord
 
 
 def annotate_record(

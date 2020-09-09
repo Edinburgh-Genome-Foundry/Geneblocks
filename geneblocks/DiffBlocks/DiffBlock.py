@@ -1,21 +1,20 @@
 from ..Location import Location
 from ..biotools import sequences_differences
 
+
 class DiffBlock:
     """Class to represent a segment that differs between sequences.
-
 
     Parameters
     ----------
     operation
       One of "insert", "delete", "replace", or "equal".
-    
+
     s1_location
       The Location(start, end) of the region in sequence sequence s1.
-    
+
     s2_location
       The Location(start, end) of the region in sequence sequence s2.
-    
     """
 
     def __init__(self, operation, s1_location, s2_location):
@@ -68,10 +67,7 @@ class DiffBlock:
                 self.s1_location.end,
             )
         elif self.operation == "transpose":
-            label = "was at %d-%d" % (
-                self.s1_location.start,
-                self.s1_location.end,
-            )
+            label = "was at %d-%d" % (self.s1_location.start, self.s1_location.end,)
         elif self.operation == "equal":
             label = "Equal"
 
@@ -81,11 +77,7 @@ class DiffBlock:
 
     def __str__(self):
         """Represent a diffbloc, for instance: "insert 10-30|105-105" """
-        return "%s %s|%s" % (
-            self.operation,
-            self.s1_location,
-            self.s2_location,
-        )
+        return "%s %s|%s" % (self.operation, self.s1_location, self.s2_location,)
 
     def __repr__(self):
         return str(self)

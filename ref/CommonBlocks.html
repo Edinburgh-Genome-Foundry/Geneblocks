@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,27 +7,30 @@
     
       <link rel="stylesheet" href="../_static/pygments.css">
       <link rel="stylesheet" href="../_static/theme.css">
-      <link rel="stylesheet" href="../_static/css/custom.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
       <script src="../_static/theme.js" defer></script>
     
+      <link rel="shortcut icon" href="../_static/favicon.png"/>
   <link rel="index" title="Index" href="../genindex.html" />
   <link rel="search" title="Search" href="../search.html" />
   <link rel="next" title="DiffBlocks" href="DiffBlocks.html" />
   <link rel="prev" title="GeneBlocks" href="../index.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../index.html" class="home-link">
     
       <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
@@ -40,12 +41,15 @@
     <navlinks class="can-hide">
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -60,12 +64,15 @@
             
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -111,6 +118,12 @@
           </li>
 
         
+          <li class="toctree-l1 "><a href="utils.html" class="reference internal ">Utils</a>
+
+            
+          </li>
+
+        
           <li class="toctree-l1 "><a href="biotools.html" class="reference internal ">Biotools</a>
 
             
@@ -150,38 +163,36 @@
             
   <div class="section" id="commonblocks">
 <h1>CommonBlocks<a class="headerlink" href="#commonblocks" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="geneblocks.CommonBlocks">
-<em class="property">class </em><code class="sig-prename descclassname">geneblocks.</code><code class="sig-name descname">CommonBlocks</code><span class="sig-paren">(</span><em class="sig-param">common_blocks</em>, <em class="sig-param">records</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">geneblocks.</code><code class="sig-name descname">CommonBlocks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">common_blocks</span></em>, <em class="sig-param"><span class="n">records</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to represent a set of common blocks from different sequences.</p>
 <p>Create with <code class="docutils literal notranslate"><span class="pre">CommonBlocks.from_sequences</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">common_blocks</span> <span class="o">=</span> <span class="n">CommonBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">({</span><span class="s1">&#39;s1&#39;</span><span class="p">:</span> <span class="s1">&#39;ATGC...&#39;</span><span class="p">})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">common_blocks</span> <span class="o">=</span> <span class="n">CommonBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">({</span><span class="s1">&#39;s1&#39;</span><span class="p">:</span> <span class="s1">&#39;ATGC...&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>common_blocks</strong></p>
-<blockquote>
-<div><p>A dictionnary of the sequences to compare, of the form
+<dd class="field-odd"><dl class="simple">
+<dt><strong>common_blocks</strong></dt><dd><p>A dictionary of the sequences to compare, of the form
 {sequence_name: ATGC_sequence_string} or a list of records, all with
 different IDs.</p>
-</div></blockquote>
-<p><strong>records</strong></p>
-<blockquote>
-<div><p>A dictionnary of the biopython records of the sequences
-{record_id: record}</p>
-</div></blockquote>
+</dd>
+<dt><strong>records</strong></dt><dd><p>A dictionary of the Biopython records of the sequences
+{record_id: record}.</p>
 </dd>
 </dl>
-<dl class="method">
+</dd>
+</dl>
+<dl class="py method">
 <dt id="geneblocks.CommonBlocks.common_blocks_records">
 <code class="sig-name descname">common_blocks_records</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.common_blocks_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.common_blocks_records" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all common blocks as a list of Biopython records.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="geneblocks.CommonBlocks.common_blocks_to_csv">
-<code class="sig-name descname">common_blocks_to_csv</code><span class="sig-paren">(</span><em class="sig-param">target_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.common_blocks_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.common_blocks_to_csv" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">common_blocks_to_csv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target_file</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.common_blocks_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.common_blocks_to_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the common blocks into a CSV file.</p>
 <p>If a target CSV file is provided the result is written to that file.
 Otherwise the result is returned as a string.</p>
@@ -189,53 +200,47 @@ Otherwise the result is returned as a string.</p>
 sequence.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="geneblocks.CommonBlocks.compute_unique_blocks">
 <code class="sig-name descname">compute_unique_blocks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.compute_unique_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.compute_unique_blocks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a dictionnary listing unique blocks by sequence.</p>
+<dd><p>Return a dictionary listing unique blocks by sequence.</p>
 <p>The unique blocks are the blocks between the selected common blocks.</p>
 <p>The result is of the form {seq: [(start, end), (start2, end2), …]}</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="geneblocks.CommonBlocks.plot_common_blocks">
-<code class="sig-name descname">plot_common_blocks</code><span class="sig-paren">(</span><em class="sig-param">colors='auto'</em>, <em class="sig-param">axes=None</em>, <em class="sig-param">figure_width=10</em>, <em class="sig-param">ax_height=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.plot_common_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.plot_common_blocks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_common_blocks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">figure_width</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">ax_height</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.plot_common_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.plot_common_blocks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the common blocks found on vertically stacked axes.</p>
 <p>The axes on which the plots are drawn are returned at the end.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>colors</strong></p>
-<blockquote>
-<div><p>Either a list of colors to use for blocks or “auto” for the default.</p>
-</div></blockquote>
-<p><strong>axes</strong></p>
-<blockquote>
-<div><p>A list of matplotlib axes on which to plot, or None for new axes</p>
-</div></blockquote>
-<p><strong>figure_width</strong></p>
-<blockquote>
-<div><p>Width of the final figure in inches</p>
-</div></blockquote>
-<p><strong>ax_eight</strong></p>
-<blockquote>
-<div><p>Height of each plot</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>colors</strong></dt><dd><p>Either a list of colors to use for blocks or “auto” for the default.</p>
+</dd>
+<dt><strong>axes</strong></dt><dd><p>A list of matplotlib axes on which to plot, or None for new axes.</p>
+</dd>
+<dt><strong>figure_width</strong></dt><dd><p>Width of the final figure in inches.</p>
+</dd>
+<dt><strong>ax_eight</strong></dt><dd><p>Height of each plot.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="geneblocks.CommonBlocks.sequences_with_annotated_blocks">
-<code class="sig-name descname">sequences_with_annotated_blocks</code><span class="sig-paren">(</span><em class="sig-param">colors='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.sequences_with_annotated_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.sequences_with_annotated_blocks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sequences_with_annotated_blocks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">'auto'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.sequences_with_annotated_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.sequences_with_annotated_blocks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of Biopython records representing the sequences
-with annotations indicating the common blocks</p>
+with annotations indicating the common blocks.</p>
 <p>Parameter <code class="docutils literal notranslate"><span class="pre">colors</span></code> is either a list of colors or “auto” for the
 default.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="geneblocks.CommonBlocks.unique_blocks_records">
-<code class="sig-name descname">unique_blocks_records</code><span class="sig-paren">(</span><em class="sig-param">target_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.unique_blocks_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.unique_blocks_records" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">unique_blocks_records</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target_file</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/CommonBlocks/CommonBlocks.html#CommonBlocks.unique_blocks_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.CommonBlocks.unique_blocks_records" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all unique blocks as a list of Biopython records.</p>
 </dd></dl>
 
@@ -258,10 +263,13 @@ default.</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

@@ -10,6 +10,7 @@
    ref/CommonBlocks
    ref/DiffBlocks
    ref/sequence_modification_utils
+   ref/utils
    ref/biotools
 
 .. raw:: html

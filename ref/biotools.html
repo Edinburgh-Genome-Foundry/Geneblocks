@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,26 +7,29 @@
     
       <link rel="stylesheet" href="../_static/pygments.css">
       <link rel="stylesheet" href="../_static/theme.css">
-      <link rel="stylesheet" href="../_static/css/custom.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
       <script src="../_static/theme.js" defer></script>
     
+      <link rel="shortcut icon" href="../_static/favicon.png"/>
   <link rel="index" title="Index" href="../genindex.html" />
   <link rel="search" title="Search" href="../search.html" />
-  <link rel="prev" title="Sequence modifications utils" href="sequence_modification_utils.html" /> 
+  <link rel="prev" title="Utils" href="utils.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../index.html" class="home-link">
     
       <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
@@ -39,12 +40,15 @@
     <navlinks class="can-hide">
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -59,12 +63,15 @@
             
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -104,6 +111,12 @@
           </li>
 
         
+          <li class="toctree-l1 "><a href="utils.html" class="reference internal ">Utils</a>
+
+            
+          </li>
+
+        
           <li class="toctree-l1 current"><a href="#" class="reference internal current">Biotools</a>
 
             
@@ -134,8 +147,8 @@
 
   <ul class="page-nav">
   <li class="prev">
-    <a href="sequence_modification_utils.html"
-       title="previous chapter">← Sequence modifications utils</a>
+    <a href="utils.html"
+       title="previous chapter">← Utils</a>
   </li>
 </ul>
   
@@ -145,72 +158,60 @@
             
   <div class="section" id="module-geneblocks.biotools">
 <span id="biotools"></span><h1>Biotools<a class="headerlink" href="#module-geneblocks.biotools" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="geneblocks.biotools.annotate_record">
-<code class="sig-prename descclassname">geneblocks.biotools.</code><code class="sig-name descname">annotate_record</code><span class="sig-paren">(</span><em class="sig-param">seqrecord</em>, <em class="sig-param">location='full'</em>, <em class="sig-param">feature_type='feature'</em>, <em class="sig-param">margin=0</em>, <em class="sig-param">**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/biotools.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.biotools.annotate_record" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">geneblocks.biotools.</code><code class="sig-name descname">annotate_record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seqrecord</span></em>, <em class="sig-param"><span class="n">location</span><span class="o">=</span><span class="default_value">'full'</span></em>, <em class="sig-param"><span class="n">feature_type</span><span class="o">=</span><span class="default_value">'feature'</span></em>, <em class="sig-param"><span class="n">margin</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">qualifiers</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/biotools.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.biotools.annotate_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a feature to a Biopython SeqRecord.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>seqrecord</strong></p>
-<blockquote>
-<div><p>The biopython seqrecord to be annotated.</p>
-</div></blockquote>
-<p><strong>location</strong></p>
-<blockquote>
-<div><p>Either (start, end) or (start, end, strand). (strand defaults to +1)</p>
-</div></blockquote>
-<p><strong>feature_type</strong></p>
-<blockquote>
-<div><p>The type associated with the feature</p>
-</div></blockquote>
-<p><strong>margin</strong></p>
-<blockquote>
-<div><p>Number of extra bases added on each side of the given location.</p>
-</div></blockquote>
-<p><strong>qualifiers</strong></p>
-<blockquote>
-<div><p>Dictionnary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>seqrecord</strong></dt><dd><p>The biopython seqrecord to be annotated.</p>
+</dd>
+<dt><strong>location</strong></dt><dd><p>Either (start, end) or (start, end, strand). (strand defaults to +1)</p>
+</dd>
+<dt><strong>feature_type</strong></dt><dd><p>The type associated with the feature</p>
+</dd>
+<dt><strong>margin</strong></dt><dd><p>Number of extra bases added on each side of the given location.</p>
+</dd>
+<dt><strong>qualifiers</strong></dt><dd><p>Dictionnary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="geneblocks.biotools.random_dna_sequence">
-<code class="sig-prename descclassname">geneblocks.biotools.</code><code class="sig-name descname">random_dna_sequence</code><span class="sig-paren">(</span><em class="sig-param">length</em>, <em class="sig-param">probas=None</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/biotools.html#random_dna_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.biotools.random_dna_sequence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">geneblocks.biotools.</code><code class="sig-name descname">random_dna_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span></em>, <em class="sig-param"><span class="n">probas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/biotools.html#random_dna_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.biotools.random_dna_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a random DNA sequence (“ATGGCGT…”) with the specified length.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>length</strong></p>
-<blockquote>
-<div><p>Length of the DNA sequence.</p>
-</div></blockquote>
-<p><strong>proba</strong></p>
-<blockquote>
-<div><p>Frequencies for the different nucleotides, for instance
+<dd class="field-odd"><dl class="simple">
+<dt><strong>length</strong></dt><dd><p>Length of the DNA sequence.</p>
+</dd>
+<dt><strong>proba</strong></dt><dd><p>Frequencies for the different nucleotides, for instance
 <code class="docutils literal notranslate"><span class="pre">probas={&quot;A&quot;:0.2,</span> <span class="pre">&quot;T&quot;:0.3,</span> <span class="pre">&quot;G&quot;:0.3,</span> <span class="pre">&quot;C&quot;:0.2}</span></code>.
 If not specified, all nucleotides are equiprobable (p=0.25).</p>
-</div></blockquote>
-<p><strong>seed</strong></p>
-<blockquote>
-<div><p>The seed to feed to the random number generator. When a seed is provided
+</dd>
+<dt><strong>seed</strong></dt><dd><p>The seed to feed to the random number generator. When a seed is provided
 the random results depend deterministically on the seed, thus enabling
 reproducibility</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="geneblocks.biotools.sequences_differences">
-<code class="sig-prename descclassname">geneblocks.biotools.</code><code class="sig-name descname">sequences_differences</code><span class="sig-paren">(</span><em class="sig-param">seq1</em>, <em class="sig-param">seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/biotools.html#sequences_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.biotools.sequences_differences" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">geneblocks.biotools.</code><code class="sig-name descname">sequences_differences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seq1</span></em>, <em class="sig-param"><span class="n">seq2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/biotools.html#sequences_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.biotools.sequences_differences" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of nucleotides that differ in the two sequences.</p>
 <p>seq1, seq2 should be strings of DNA sequences e.g. “ATGCTGTGC”</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="geneblocks.biotools.sequences_differences_array">
-<code class="sig-prename descclassname">geneblocks.biotools.</code><code class="sig-name descname">sequences_differences_array</code><span class="sig-paren">(</span><em class="sig-param">seq1</em>, <em class="sig-param">seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/biotools.html#sequences_differences_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.biotools.sequences_differences_array" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">geneblocks.biotools.</code><code class="sig-name descname">sequences_differences_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seq1</span></em>, <em class="sig-param"><span class="n">seq2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/biotools.html#sequences_differences_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.biotools.sequences_differences_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an array [0, 0, 1, 0, …] with 1s for sequence differences.</p>
 <p>seq1, seq2 should both be ATGC strings.</p>
 </dd></dl>
@@ -222,16 +223,19 @@ reproducibility</p>
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="prev">
-    <a href="sequence_modification_utils.html"
-       title="previous chapter">← Sequence modifications utils</a>
+    <a href="utils.html"
+       title="previous chapter">← Utils</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

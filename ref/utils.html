@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-      <title>DiffBlocks</title>
+      <title>Utils</title>
     
       <link rel="stylesheet" href="../_static/pygments.css">
       <link rel="stylesheet" href="../_static/theme.css">
@@ -25,8 +25,8 @@
       <link rel="shortcut icon" href="../_static/favicon.png"/>
   <link rel="index" title="Index" href="../genindex.html" />
   <link rel="search" title="Search" href="../search.html" />
-  <link rel="next" title="Sequence modifications utils" href="sequence_modification_utils.html" />
-  <link rel="prev" title="CommonBlocks" href="CommonBlocks.html" /> 
+  <link rel="next" title="Biotools" href="biotools.html" />
+  <link rel="prev" title="Sequence modifications utils" href="sequence_modification_utils.html" /> 
   </head>
 
   <body>
@@ -100,14 +100,8 @@
           </li>
 
         
-          <li class="toctree-l1 current"><a href="#" class="reference internal current">DiffBlocks</a>
+          <li class="toctree-l1 "><a href="DiffBlocks.html" class="reference internal ">DiffBlocks</a>
 
-            
-              <ul>
-                
-                  <li class="toctree-l2"><a href="#diffblocks" class="reference internal">DiffBlocks</a></li>
-                
-              </ul>
             
           </li>
 
@@ -118,8 +112,14 @@
           </li>
 
         
-          <li class="toctree-l1 "><a href="utils.html" class="reference internal ">Utils</a>
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Utils</a>
 
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#module-geneblocks.utils" class="reference internal">Utils</a></li>
+                
+              </ul>
             
           </li>
 
@@ -142,18 +142,18 @@
   <ul class="breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
     
-    <li>DiffBlocks</li>
+    <li>Utils</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
-    <a href="CommonBlocks.html"
-       title="previous chapter">← CommonBlocks</a>
+    <a href="sequence_modification_utils.html"
+       title="previous chapter">← Sequence modifications utils</a>
   </li>
   <li class="next">
-    <a href="sequence_modification_utils.html"
-       title="next chapter">Sequence modifications utils →</a>
+    <a href="biotools.html"
+       title="next chapter">Biotools →</a>
   </li>
 </ul>
   
@@ -161,37 +161,17 @@
 <hr>
           <div class="content" role="main">
             
-  <div class="section" id="diffblocks">
-<h1>DiffBlocks<a class="headerlink" href="#diffblocks" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="geneblocks.DiffBlocks">
-<em class="property">class </em><code class="sig-prename descclassname">geneblocks.</code><code class="sig-name descname">DiffBlocks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s1</span></em>, <em class="sig-param"><span class="n">s2</span></em>, <em class="sig-param"><span class="n">blocks</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/DiffBlocks/DiffBlocks.html#DiffBlocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.DiffBlocks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to generate and represent DiffBlocks.</p>
-<p>Usage:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DiffBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="geneblocks.DiffBlocks.from_sequences">
-<em class="property">static </em><code class="sig-name descname">from_sequences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s1</span></em>, <em class="sig-param"><span class="n">s2</span></em>, <em class="sig-param"><span class="n">blast_over</span><span class="o">=</span><span class="default_value">500</span></em>, <em class="sig-param"><span class="n">max_complexity</span><span class="o">=</span><span class="default_value">100000000.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/DiffBlocks/DiffBlocks.html#DiffBlocks.from_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.DiffBlocks.from_sequences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create DiffBlocks by comparing two sequences.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>s1, s2</strong></dt><dd><p>Two sequences, either “ATGC…” strings or Biopython records.</p>
-</dd>
-<dt><strong>blast_over</strong></dt><dd><p>A blast will be triggered to accelerate homology finding if
-len(s1) + len(s2) &gt; blast_over.</p>
-</dd>
-<dt><strong>max_complexity</strong></dt><dd><p>If len(s1) * len(s2) is over max_complexity, no analysis is done and
-s1 is just labeled as a “change” of s2 (useful internally during the
-recursions of this method).</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
+  <div class="section" id="module-geneblocks.utils">
+<span id="utils"></span><h1>Utils<a class="headerlink" href="#module-geneblocks.utils" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="geneblocks.utils.sequences_are_circularly_equal">
+<code class="sig-prename descclassname">geneblocks.utils.</code><code class="sig-name descname">sequences_are_circularly_equal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequences</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geneblocks/utils.html#sequences_are_circularly_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geneblocks.utils.sequences_are_circularly_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether all the sequences represent the same circular sequence.</p>
+<p>This means that the sequences are differently rotated versions of a same
+circular sequence, and for any pair s1, s2 in the sequences, there is an
+index i such that s1 = s2[i:] + s2[:i].</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">sequences</span></code> parameter should be a list of “ATGC” strings or
+SeqRecords.</p>
 </dd></dl>
 
 </div>
@@ -201,12 +181,12 @@ recursions of this method).</p>
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="prev">
-    <a href="CommonBlocks.html"
-       title="previous chapter">← CommonBlocks</a>
+    <a href="sequence_modification_utils.html"
+       title="previous chapter">← Sequence modifications utils</a>
   </li>
   <li class="next">
-    <a href="sequence_modification_utils.html"
-       title="next chapter">Sequence modifications utils →</a>
+    <a href="biotools.html"
+       title="next chapter">Biotools →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.

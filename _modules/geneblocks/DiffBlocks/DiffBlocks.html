@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,25 +7,28 @@
     
       <link rel="stylesheet" href="../../../_static/pygments.css">
       <link rel="stylesheet" href="../../../_static/theme.css">
-      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
       <script src="../../../_static/theme.js" defer></script>
     
+      <link rel="shortcut icon" href="../../../_static/favicon.png"/>
   <link rel="index" title="Index" href="../../../genindex.html" />
   <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../../index.html" class="home-link">
     
       <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
@@ -38,12 +39,15 @@
     <navlinks class="can-hide">
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -58,12 +62,15 @@
             
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/geneblocks"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -103,6 +110,12 @@
           </li>
 
         
+          <li class="toctree-l1 "><a href="../../../ref/utils.html" class="reference internal ">Utils</a>
+
+            
+          </li>
+
+        
           <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
 
             
@@ -135,18 +148,19 @@
           <div class="content" role="main">
             
   <h1>Source code for geneblocks.DiffBlocks.DiffBlocks</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="k">as</span> <span class="nn">gridspec</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="n">sequence_to_record</span>
-<span class="kn">from</span> <span class="nn">..CommonBlocks</span> <span class="k">import</span> <span class="n">CommonBlocks</span>
+<span class="kn">from</span> <span class="nn">..Location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="kn">import</span> <span class="n">sequence_to_record</span>
+<span class="kn">from</span> <span class="nn">..CommonBlocks</span> <span class="kn">import</span> <span class="n">CommonBlocks</span>
 
-<span class="kn">from</span> <span class="nn">.DiffBlock</span> <span class="k">import</span> <span class="n">DiffBlock</span>
-<span class="kn">from</span> <span class="nn">.DiffRecordTranslator</span> <span class="k">import</span> <span class="n">DiffRecordTranslator</span>
-<span class="kn">from</span> <span class="nn">.diffblocks_tools</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.DiffBlock</span> <span class="kn">import</span> <span class="n">DiffBlock</span>
+<span class="kn">from</span> <span class="nn">.DiffRecordTranslator</span> <span class="kn">import</span> <span class="n">DiffRecordTranslator</span>
+<span class="kn">from</span> <span class="nn">.diffblocks_tools</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">compute_levenshtein_blocks</span><span class="p">,</span>
     <span class="n">get_optimal_common_blocks</span><span class="p">,</span>
     <span class="n">merge_blocs_by_location</span><span class="p">,</span>
@@ -163,15 +177,15 @@
 <span class="sd">    &gt;&gt;&gt; DiffBlocks.from_sequences(s1, s2)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">blocks</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">blocks</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s1</span> <span class="o">=</span> <span class="n">s1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s2</span> <span class="o">=</span> <span class="n">s2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="n">blocks</span>
 
 <div class="viewcode-block" id="DiffBlocks.from_sequences"><a class="viewcode-back" href="../../../ref/DiffBlocks.html#geneblocks.DiffBlocks.from_sequences">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_sequences</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">blast_over</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">max_complexity</span><span class="o">=</span><span class="mf">1e8</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create DiffBlocks by comparing two sequences</span>
-<span class="sd">        </span>
+        <span class="sd">&quot;&quot;&quot;Create DiffBlocks by comparing two sequences.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
@@ -181,12 +195,11 @@
 <span class="sd">        blast_over</span>
 <span class="sd">          A blast will be triggered to accelerate homology finding if</span>
 <span class="sd">          len(s1) + len(s2) &gt; blast_over.</span>
-<span class="sd">        </span>
+
 <span class="sd">        max_complexity</span>
 <span class="sd">          If len(s1) * len(s2) is over max_complexity, no analysis is done and</span>
 <span class="sd">          s1 is just labeled as a &quot;change&quot; of s2 (useful internally during the</span>
-<span class="sd">          recursions of this method)</span>
-<span class="sd">        </span>
+<span class="sd">          recursions of this method).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Note: the sequences will always be upperized before they are</span>
         <span class="c1"># compared. however we also need to keep the initial sequences to</span>
@@ -249,12 +262,8 @@
                     <span class="n">subdiffblocks</span> <span class="o">=</span> <span class="p">[</span>
                         <span class="n">DiffBlock</span><span class="p">(</span>
                             <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
-                            <span class="n">s1_location</span><span class="o">=</span><span class="n">Location</span><span class="p">(</span>
-                                <span class="n">end1</span><span class="p">,</span> <span class="n">next_start1</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="n">s1</span>
-                            <span class="p">),</span>
-                            <span class="n">s2_location</span><span class="o">=</span><span class="n">Location</span><span class="p">(</span>
-                                <span class="n">next_start2</span><span class="p">,</span> <span class="n">next_start2</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="n">s2</span>
-                            <span class="p">),</span>
+                            <span class="n">s1_location</span><span class="o">=</span><span class="n">Location</span><span class="p">(</span><span class="n">end1</span><span class="p">,</span> <span class="n">next_start1</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="n">s1</span><span class="p">),</span>
+                            <span class="n">s2_location</span><span class="o">=</span><span class="n">Location</span><span class="p">(</span><span class="n">next_start2</span><span class="p">,</span> <span class="n">next_start2</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="n">s2</span><span class="p">),</span>
                         <span class="p">)</span>
                     <span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -275,9 +284,7 @@
                         <span class="n">block</span><span class="o">.</span><span class="n">s2_location</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">s2</span>
                 <span class="n">diffblocks</span> <span class="o">+=</span> <span class="n">subdiffblocks</span><span class="o">.</span><span class="n">blocks</span>
             <span class="n">diffblocks</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">b</span>
-                <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">diffblocks</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">s1_location</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">s2_location</span><span class="p">)</span>
+                <span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">diffblocks</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">s1_location</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">s2_location</span><span class="p">)</span>
             <span class="p">]</span>
             <span class="n">sorted_blocks</span> <span class="o">=</span> <span class="n">compute_sorted_blocks</span><span class="p">(</span><span class="n">diffblocks</span> <span class="o">+</span> <span class="n">remarks</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">DiffBlocks</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">sorted_blocks</span><span class="p">)</span>
@@ -297,15 +304,11 @@
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">DiffBlocks</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">blocks</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">merged</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocks_per_span</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span> <span class="n">change_gap</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="s2">&quot;s2&quot;</span><span class="p">):</span>
-        <span class="n">blocks</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">b</span>
-            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span>
-            <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">operation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;reverse&quot;</span><span class="p">,</span> <span class="s2">&quot;transpose&quot;</span><span class="p">]</span>
-        <span class="p">]</span>
-        <span class="n">remarks</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">operation</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;reverse&quot;</span><span class="p">,</span> <span class="s2">&quot;transpose&quot;</span><span class="p">]</span>
-        <span class="p">]</span>
+    <span class="k">def</span> <span class="nf">merged</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">blocks_per_span</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span> <span class="n">change_gap</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">replace_gap</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="s2">&quot;s2&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">operation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;reverse&quot;</span><span class="p">,</span> <span class="s2">&quot;transpose&quot;</span><span class="p">]]</span>
+        <span class="n">remarks</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">operation</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;reverse&quot;</span><span class="p">,</span> <span class="s2">&quot;transpose&quot;</span><span class="p">]]</span>
         <span class="k">if</span> <span class="n">blocks_per_span</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">max_blocks</span><span class="p">,</span> <span class="n">span</span> <span class="o">=</span> <span class="n">blocks_per_span</span>
             <span class="n">blocks</span> <span class="o">=</span> <span class="n">merge_blocs_by_location</span><span class="p">(</span>
@@ -316,7 +319,10 @@
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">change_gap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">blocks</span> <span class="o">=</span> <span class="n">merge_successive_blocks</span><span class="p">(</span>
-                <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">change_gap</span><span class="o">=</span><span class="n">change_gap</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="s2">&quot;s2&quot;</span>
+                <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span>
+                <span class="n">change_gap</span><span class="o">=</span><span class="n">change_gap</span><span class="p">,</span>
+                <span class="n">replace_gap</span><span class="o">=</span><span class="n">replace_gap</span><span class="p">,</span>
+                <span class="n">reference</span><span class="o">=</span><span class="s2">&quot;s2&quot;</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="n">compute_sorted_blocks</span><span class="p">(</span><span class="n">blocks</span> <span class="o">+</span> <span class="n">remarks</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">DiffBlocks</span><span class="p">(</span><span class="n">s1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">s2</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
@@ -328,11 +334,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">to_feature</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">)</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">translator_class</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-        <span class="n">separate_axes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">sequence</span><span class="o">=</span><span class="s2">&quot;s2&quot;</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">plot_kw</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">translator_class</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">separate_axes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="s2">&quot;s2&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kw</span>
     <span class="p">):</span>
 
         <span class="k">if</span> <span class="n">translator_class</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
@@ -354,40 +356,34 @@
                 <span class="n">fig</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">figure</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-            <span class="n">plot_kw</span><span class="p">[</span><span class="s1">&#39;annotate_inline&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;annotate_inline&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">plot_kw</span><span class="p">[</span><span class="s2">&quot;annotate_inline&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;annotate_inline&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">stats1</span> <span class="o">=</span> <span class="n">gr_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kw</span><span class="p">)</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">stats2</span> <span class="o">=</span> <span class="n">gr_diffrecord</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">with_ruler</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kw</span><span class="p">)</span>
+            <span class="n">max_features_1</span> <span class="o">=</span> <span class="n">gr_record</span><span class="o">.</span><span class="n">feature_level_height</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stats1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+            <span class="p">)</span>
             <span class="n">max_level_1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
-                <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;annotation_y&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stats1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+                <span class="p">[</span><span class="n">max_features_1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;annotation_y&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stats1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
             <span class="p">)</span>
-            <span class="n">max_features_1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
-                <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;feature_y&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stats1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
-            <span class="p">)</span>
-            <span class="n">max_level_2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
-                <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;annotation_y&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stats2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
-            <span class="p">)</span>
+            <span class="n">max_level_2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;annotation_y&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stats2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span> <span class="o">+</span> <span class="mi">2</span>
+            <span class="n">max_level_1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">max_level_1</span><span class="p">))</span>
+            <span class="n">max_level_2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">max_level_2</span><span class="p">))</span>
+            <span class="c1"># print (stats2)</span>
             <span class="n">n_levels</span> <span class="o">=</span> <span class="n">max_level_1</span> <span class="o">+</span> <span class="n">max_level_2</span>
             <span class="k">if</span> <span class="n">max_level_1</span> <span class="ow">and</span> <span class="n">max_level_2</span><span class="p">:</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 
                 <span class="c1">##</span>
+                <span class="n">easing</span> <span class="o">=</span> <span class="mi">3</span>
+                <span class="n">gs</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="n">n_levels</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">easing</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">n_levels</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+                <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[:</span> <span class="n">max_level_1</span> <span class="o">+</span> <span class="n">easing</span><span class="p">])</span>
+                <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="n">max_level_1</span> <span class="o">+</span> <span class="n">easing</span> <span class="p">:])</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">stats1</span> <span class="o">=</span> <span class="n">gr_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kw</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">stats2</span> <span class="o">=</span> <span class="n">gr_diffrecord</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">with_ruler</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kw</span><span class="p">)</span>
 
-                <span class="n">gs</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="n">n_levels</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
-                    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">n_levels</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span>
-                <span class="p">)</span>
-                <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[:</span><span class="n">max_level_1</span><span class="p">])</span>
-                <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="n">max_level_1</span><span class="p">:])</span>
-                <span class="n">_</span><span class="p">,</span> <span class="n">stats1</span> <span class="o">=</span> <span class="n">gr_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                    <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kw</span>
-                <span class="p">)</span>
-                <span class="n">_</span><span class="p">,</span> <span class="n">stats2</span> <span class="o">=</span> <span class="n">gr_diffrecord</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                    <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">with_ruler</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kw</span>
-                <span class="p">)</span>
-            <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-
-            <span class="c1"># fig.set_size_inches((width, 3 + 0.6 * n_levels))</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="c1"># fig.set_size_inches((width, 3 + 0.4 * n_levels))</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
             <span class="n">ax2</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">gr_diffrecord</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
                 <span class="n">ax1</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
@@ -417,7 +413,7 @@
                 <span class="n">s2</span> <span class="o">=</span> <span class="n">s2</span> <span class="o">+</span> <span class="n">block</span><span class="o">.</span><span class="n">s2_location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">])</span></div>
 </pre></div>
 
@@ -427,10 +423,13 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

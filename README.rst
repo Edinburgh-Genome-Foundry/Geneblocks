@@ -8,9 +8,9 @@
 GeneBlocks
 ==========
 
-.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks.svg?branch=master
-   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks
-   :alt: Travis CI build status
+.. image:: https://github.com/Edinburgh-Genome-Foundry/Geneblocks/actions/workflows/build.yml/badge.svg
+    :target: https://github.com/Edinburgh-Genome-Foundry/Geneblocks/actions/workflows/build.yml
+    :alt: GitHub CI build status
 
 .. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/Geneblocks/badge.svg
   :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/Geneblocks
@@ -40,20 +40,20 @@ The CommonBlocks feature requires NCBI BLAST+. On Ubuntu, install it with
 
 .. code:: shell
 
-    (sudo) apt-get install ncbi-blast+
+    apt-get install ncbi-blast+
 
 
 You can install GeneBlocks through PIP:
 
 .. code:: shell
 
-    (sudo) pip install geneblocks
+    pip install geneblocks
 
 Alternatively, you can unzip the sources in a folder and type:
 
 .. code:: shell
 
-    (sudo) python setup.py install
+    python setup.py install
 
 
 Usage
@@ -180,10 +180,10 @@ of modifications brought to the second sequence:
      <img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/complex_sequences.png'
       width='700px'/>
 
-Licence
--------
+License = MIT
+-------------
 
 Geneblocks is an open-source software originally written at the `Edinburgh Genome Foundry
 <http://www.genomefoundry.org>`_ by `Zulko <https://github.com/Zulko>`_
-and `released on Github <https://github.com/Edinburgh-Genome-Foundry/Geneblocks>`_ under the MIT licence (Copyright 2017 Edinburgh Genome Foundry).
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/Geneblocks>`_ under the MIT license (Copyright 2017 Edinburgh Genome Foundry).
 Everyone is welcome to contribute!

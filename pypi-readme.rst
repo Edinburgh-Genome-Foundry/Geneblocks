@@ -1,9 +1,9 @@
 GeneBlocks
-=============
+==========
 
-.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
-   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Geneblocks
-   :alt: Travis CI build status
+.. image:: https://github.com/Edinburgh-Genome-Foundry/Geneblocks/actions/workflows/build.yml/badge.svg
+    :target: https://github.com/Edinburgh-Genome-Foundry/Geneblocks/actions/workflows/build.yml
+    :alt: GitHub CI build status
 
 .. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/Geneblocks/badge.svg
   :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/Geneblocks

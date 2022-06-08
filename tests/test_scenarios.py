@@ -1,5 +1,6 @@
 import os
 import matplotlib
+import networkx as nx
 from geneblocks import CommonBlocks, DiffBlocks, load_record
 from geneblocks.biotools import reverse_complement, random_dna_sequence
 from geneblocks.DiffBlocks import DiffBlock
@@ -9,9 +10,7 @@ matplotlib.use("Agg")
 
 
 def test_CommonBlocks_basics(tmpdir):
-    C1, A, B, C2, C3, D, E, F = [
-        random_dna_sequence(100 * L) for L in range(1, 9)
-    ]
+    C1, A, B, C2, C3, D, E, F = [random_dna_sequence(100 * L) for L in range(1, 9)]
 
     sequences = {
         "a": C1 + A + C2,
@@ -58,6 +57,7 @@ def test_DiffBlocks_basics(tmpdir):
         "equal 2404-3404|2524-3524",
     ]
 
+
 def test_features_transfer():
     seq_folder = os.path.join("tests", "sequences", "features_transfer")
     insert = load_record(os.path.join(seq_folder, "insert.gb"), name="insert")
@@ -72,10 +72,18 @@ def test_features_transfer():
     assert len(plasmid.features) == 6
 
 
+def test_networkx_dag_longest_path():
+    # Github issue #7
+    # networkx >=2.6 has a different correct output. This test catches future changes.
+    test_graph = nx.DiGraph([("block_1", "block_3"), ("block_1", "block_2")])
+    assert nx.dag_longest_path(test_graph) == ["block_1", "block_3"]
+
+
 def test_good_management_of_homologies():
     """This checks for a former obscure bug where a sequence with 2 homologies
     in seq2 corresponding to a single sequence in s1 used to cause an index
     error due to the "*" added by the algorithm to the end of homologies."""
+    # See also Github issue #7
     b1 = random_dna_sequence(4000, seed=123)
     b2 = random_dna_sequence(4000, seed=234)
     b3 = random_dna_sequence(4000, seed=345)
@@ -83,4 +91,4 @@ def test_good_management_of_homologies():
     seq2 = "T" + b1 + "T" + b3 + b2 + b1 + b1
 
     blocks = DiffBlocks.from_sequences(seq1, seq2).merged()
-    assert len(blocks.blocks) == 10
+    assert len(blocks.blocks) == 9

@@ -25,9 +25,9 @@ def test_sequences_are_circularly_equal():
     assert not sequences_are_circularly_equal([seq_1, seq_2, seq_3, seq_4])
     assert not sequences_are_circularly_equal([seq_1, seq_5])
 
+
 def test_long_equivalents():
     """Test with two 12kb sequences with only a 10bp shift"""
     path = os.path.join(this_directory, "sequences", "long_equivalents.fa")
-    seq_a, seq_b = SeqIO.parse(path, 'fasta')
+    seq_a, seq_b = SeqIO.parse(path, "fasta")
     assert sequences_are_circularly_equal([seq_a, seq_b])
-

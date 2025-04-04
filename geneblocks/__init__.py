@@ -1,4 +1,4 @@
-""" geneblocks/__init__.py """
+"""geneblocks/__init__.py"""
 
 # __all__ = []
 
@@ -16,6 +16,5 @@ __all__ = [
     "load_record",
     "random_dna_sequence",
     "reverse_complement",
-    "sequences_are_circularly_equal"
-    "__version__",
+    "sequences_are_circularly_equal" "__version__",
 ]

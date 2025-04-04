@@ -9,8 +9,7 @@ def change(seq, start, end, change):
 
 
 def insert(seq, pos, inserted):
-    """Return the sequence with ``inserted`` inserted, starting at index 'pos'
-    """
+    """Return the sequence with ``inserted`` inserted, starting at index 'pos'"""
     return seq[:pos] + inserted + seq[pos:]
 
 
@@ -30,9 +29,7 @@ def move(seq, start, end, diff):
     if diff > 0:
         return seq[:start] + seq[end : end + diff] + sub + seq[end + diff :]
     else:
-        return (
-            seq[: start + diff] + sub + seq[start + diff : start] + seq[end:]
-        )
+        return seq[: start + diff] + sub + seq[start + diff : start] + seq[end:]
 
 
 def swap(seq, pos1, pos2):

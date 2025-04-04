@@ -67,7 +67,10 @@ class DiffBlock:
                 self.s1_location.end,
             )
         elif self.operation == "transpose":
-            label = "was at %d-%d" % (self.s1_location.start, self.s1_location.end,)
+            label = "was at %d-%d" % (
+                self.s1_location.start,
+                self.s1_location.end,
+            )
         elif self.operation == "equal":
             label = "Equal"
 
@@ -77,7 +80,11 @@ class DiffBlock:
 
     def __str__(self):
         """Represent a diffbloc, for instance: "insert 10-30|105-105" """
-        return "%s %s|%s" % (self.operation, self.s1_location, self.s2_location,)
+        return "%s %s|%s" % (
+            self.operation,
+            self.s1_location,
+            self.s2_location,
+        )
 
     def __repr__(self):
         return str(self)

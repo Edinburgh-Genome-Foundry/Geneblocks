@@ -9,8 +9,7 @@ from .DiffBlock import DiffBlock
 
 
 def compute_levenshtein_blocks(seq1, seq2, max_complexity=1e8):
-    """Compute the Levenshtein blocks of insertion, deletion, replacement.
-    """
+    """Compute the Levenshtein blocks of insertion, deletion, replacement."""
     # TODO: better method for dealing with long sequences?
     l1, l2 = len(seq1), len(seq2)
     if l1 * l2 > max_complexity:
@@ -30,7 +29,7 @@ def compute_levenshtein_blocks(seq1, seq2, max_complexity=1e8):
     bop, s1, s2 = edits[0]
     e1, e2 = s1, s2
     blocks = []
-    for (op, _e1, _e2) in edits[1:]:
+    for op, _e1, _e2 in edits[1:]:
         continuity = any(
             [
                 all([op == "delete", _e1 == e1 + 1, e2 == _e2]),

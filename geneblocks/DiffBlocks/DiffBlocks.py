@@ -155,7 +155,11 @@ class DiffBlocks:
         return DiffBlocks(s1, s2, blocks)
 
     def merged(
-        self, blocks_per_span=(3, 600), change_gap=100, replace_gap=10, reference="s2",
+        self,
+        blocks_per_span=(3, 600),
+        change_gap=100,
+        replace_gap=10,
+        reference="s2",
     ):
         blocks = [b for b in self.blocks if b.operation not in ["reverse", "transpose"]]
         remarks = [b for b in self.blocks if b.operation in ["reverse", "transpose"]]

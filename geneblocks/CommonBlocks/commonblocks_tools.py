@@ -177,8 +177,7 @@ def find_homologies_between_sequences(
 
 
 def count_homologies(matches, min_size):
-    """Return a dict {(start, end): number_of_homologies_count}.
-    """
+    """Return a dict {(start, end): number_of_homologies_count}."""
     homologies_counts = {}
     if len(matches) == 1:
         segment = list(matches.keys())[0]

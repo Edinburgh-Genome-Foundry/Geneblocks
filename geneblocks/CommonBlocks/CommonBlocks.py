@@ -1,4 +1,5 @@
 """Defines central class BlockFinder."""
+
 import itertools
 from collections import OrderedDict
 from copy import deepcopy
@@ -132,8 +133,7 @@ class CommonBlocks:
             return csv_content
 
     def common_blocks_records(self):
-        """Return all common blocks as a list of Biopython records.
-        """
+        """Return all common blocks as a list of Biopython records."""
         if self.records is None:
             raise ValueError("")
         records = []
@@ -170,7 +170,7 @@ class CommonBlocks:
             colors = itertools.cycle([cm.Paired(0.21 * i % 1.0) for i in range(30)])
         blocks_and_colors = zip(self.common_blocks.items(), colors)
         for (name, data), color in blocks_and_colors:
-            for (seqname, location) in data["locations"]:
+            for seqname, location in data["locations"]:
                 annotate_record(
                     records[seqname],
                     location,
@@ -216,7 +216,7 @@ class CommonBlocks:
             )
         else:
             fig = axes[0].figure
-        for (ax, (seqname, record)) in zip(axes, records.items()):
+        for ax, (seqname, record) in zip(axes, records.items()):
             gr_record = translator.translate_record(record)
             gr_record.plot(
                 ax,
@@ -257,7 +257,7 @@ class CommonBlocks:
                 for rec_id, location in data["locations"]
             }
             for l1, l2 in itertools.combinations(locations, 2):
-                for ((id1, loc1), (id2, __loc2)) in ((l1, l2), (l2, l1)):
+                for (id1, loc1), (id2, __loc2) in ((l1, l2), (l2, l1)):
                     start1, __end1, strand1 = loc1
                     # start2, end2, strand2 = loc2
                     records[id1].features += extract_features(

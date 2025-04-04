@@ -3,9 +3,7 @@ from Bio.SeqFeature import SeqFeature, FeatureLocation
 
 
 class Location:
-    def __init__(
-        self, start, end, strand=None, sequence=None, sequence_id=None
-    ):
+    def __init__(self, start, end, strand=None, sequence=None, sequence_id=None):
 
         self.start = start
         self.end = end
@@ -47,8 +45,7 @@ class Location:
     def to_biopython_location(self):
         """Return a Biopython FeatureLocation equivalent to the location."""
         start, end, strand = [
-            None if e is None else int(e)
-            for e in [self.start, self.end, self.strand]
+            None if e is None else int(e) for e in [self.start, self.end, self.strand]
         ]
         return FeatureLocation(start, end, strand)
 

@@ -1,3 +1,3 @@
 from .CommonBlocks import CommonBlocks
 
-__all__ = ['CommonBlocks']
+__all__ = ["CommonBlocks"]

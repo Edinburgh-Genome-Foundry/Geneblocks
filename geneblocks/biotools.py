@@ -85,7 +85,12 @@ def sequence_to_record(sequence, record_id=None, name="unnamed", features=()):
     else:
         sequence = Seq(sequence)
 
-    seqrecord = SeqRecord(sequence, name=name, id=record_id, features=list(features),)
+    seqrecord = SeqRecord(
+        sequence,
+        name=name,
+        id=record_id,
+        features=list(features),
+    )
     seqrecord.annotations["molecule_type"] = "DNA"
 
     return seqrecord

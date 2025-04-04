@@ -17,6 +17,7 @@ GeneBlocks is a Python library for comparing DNA sequences. It can be used to:
 At the Edinburgh Genome Foundry, we use GeneBlocks to optimize sequence assembly, explore sets of non-annotated sequences, or visualize the differences
 between different versions of a sequence, and re-annotate records coming from third parties such as DNA manufacturers.
 
+
 Infos
 -----
 
@@ -26,9 +27,7 @@ Infos
 
   pip install geneblocks
 
-**Github Page:**
-
-`<https://github.com/Edinburgh-Genome-Foundry/geneblocks>`_
+**Github Page:** `<https://github.com/Edinburgh-Genome-Foundry/geneblocks>`_
 
 **Live demos:**
 
@@ -39,7 +38,10 @@ Infos
 
 `Transfer Genbank features between records <https://cuba.genomefoundry.org/transfer-features>`_
 
-**License:** MIT, Copyright Edinburgh Genome Foundry
+**License:** MIT
+
+Copyright 2017 Edinburgh Genome Foundry, University of Edinburgh
+
 
 More biology software
 ---------------------
@@ -47,4 +49,4 @@ More biology software
 .. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Edinburgh-Genome-Foundry.github.io/master/static/imgs/logos/egf-codon-horizontal.png
   :target: https://edinburgh-genome-foundry.github.io/
 
-Geneblocks is part of the `EGF Codons <https://edinburgh-genome-foundry.github.io/>`_ synthetic biology software suite for DNA design, manufacturing and validation.
+GeneBlocks is part of the `EGF Codons <https://edinburgh-genome-foundry.github.io/>`_ synthetic biology software suite for DNA design, manufacturing and validation.

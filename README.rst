@@ -24,6 +24,7 @@ GeneBlocks is a Python library for comparing DNA sequences. It can be used to:
 At the Edinburgh Genome Foundry, we use GeneBlocks to optimize sequence assembly, explore sets of non-annotated sequences, or visualize the differences
 between different versions of a sequence, and re-annotate records coming from third parties such as DNA manufacturers.
 
+
 Live demos
 ----------
 
@@ -32,6 +33,7 @@ Live demos
 `Plot sequence diffs <https://cuba.genomefoundry.org/compare-two-sequences>`_
 
 `Transfer Genbank features between records <https://cuba.genomefoundry.org/transfer-features>`_
+
 
 Installation
 ------------
@@ -58,7 +60,6 @@ Alternatively, you can unzip the sources in a folder and type:
 
 Usage
 -----
-
 
 Finding common blocks in a set of sequences:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,6 +90,7 @@ Result:
    <img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/common_blocks.png'
     width='600px'/>
 
+
 Transferring features between genbank records:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -97,7 +99,7 @@ In this snippet we assume that we have two genbank records:
 - A record of an annotated part, containing an expression module.
 - A record of a plasmid which contains the part but the part was not properly annotated.
 
-We will use Geneblocks to automatically detect where the part is located in
+We will use GeneBlocks to automatically detect where the part is located in
 the plasmid and automatically copy the features from the part record to the
 plasmid record.
 
@@ -118,6 +120,7 @@ The resulting annotated plasmids has annotations from both the original plasmid 
    <img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/features_transfer.png'
     width='600px'/>
 
+
 Highlighting the differences between two sequences:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -137,12 +140,13 @@ Result:
      <img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/diff_blocks.png'
       width='700px'/>
 
+
 Example on more complex sequences
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the example below we build two ~50kb "sister" sequences with many insertions,
 deletions, transpositions between them, and even a self-homology. Then we ask
-Geneblocks to compare the two sequences, in term of common blocks, and in terms
+GeneBlocks to compare the two sequences, in term of common blocks, and in terms
 of modifications brought to the second sequence:
 
 .. code:: python
@@ -180,10 +184,11 @@ of modifications brought to the second sequence:
      <img src='https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/GeneBlocks/master/examples/complex_sequences.png'
       width='700px'/>
 
+
 License = MIT
 -------------
 
-Geneblocks is an open-source software originally written at the `Edinburgh Genome Foundry
+GeneBlocks is an open-source software originally written at the `Edinburgh Genome Foundry
 <http://www.genomefoundry.org>`_ by `Zulko <https://github.com/Zulko>`_
-and `released on Github <https://github.com/Edinburgh-Genome-Foundry/Geneblocks>`_ under the MIT license (Copyright 2017 Edinburgh Genome Foundry).
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/Geneblocks>`_ under the MIT license (Copyright 2017 Edinburgh Genome Foundry, University of Edinburgh).
 Everyone is welcome to contribute!

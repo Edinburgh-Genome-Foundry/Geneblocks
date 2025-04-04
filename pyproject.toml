@@ -1,0 +1,28 @@
+[project]
+name = "geneblocks"
+version = "1.2.3"
+license = "MIT"
+authors = [{ name = "Zulko" }]
+description = "Library to compare DNA sequences (diff, common blocks, etc.)"
+readme = "pypi-readme.rst"
+keywords = ["DNA", "sequence", "blocks", "diff", "synthetic biology", "bioinformatics"]
+dependencies = [
+  "numpy",
+  "Biopython",
+  "dna_features_viewer",
+  "networkx",
+  "python-Levenshtein",
+]
+
+[project.urls]
+Homepage = "https://github.com/Edinburgh-Genome-Foundry/Geneblocks"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+exclude = ["docs"]

@@ -4,12 +4,12 @@ from .biotools import reverse_complement
 
 
 def change(seq, start, end, change):
-    """Return the sequence with ``seq[start:end]`` replaced by ``change``"""
+    """Return the sequence with ``seq[start:end]`` replaced by ``change``."""
     return seq[:start] + change + seq[end:]
 
 
 def insert(seq, pos, inserted):
-    """Return the sequence with ``inserted`` inserted, starting at index 'pos'"""
+    """Return the sequence with ``inserted`` inserted, starting at index 'pos'."""
     return seq[:pos] + inserted + seq[pos:]
 
 

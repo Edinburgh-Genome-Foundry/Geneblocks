@@ -8,7 +8,7 @@ sequences = {
     "b": B + D + C2 + C3,
     "c": E + C1 + C2,
     "d": C2 + C1 + F + C3,
-    "e": C3 + reverse_complement(C2 + C1)
+    "e": C3 + reverse_complement(C2 + C1),
 }
 
 common_blocks = CommonBlocks.from_sequences(sequences)

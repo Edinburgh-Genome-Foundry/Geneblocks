@@ -7,9 +7,7 @@ import matplotlib.pyplot as plt
 
 part_path = os.path.join("sequences", "features_transfer", "part.gb")
 part = load_record(part_path, name="part")
-plasmid_path = os.path.join(
-    "sequences", "features_transfer", "plasmid_to_annotate.gb"
-)
+plasmid_path = os.path.join("sequences", "features_transfer", "plasmid_to_annotate.gb")
 plasmid = load_record(plasmid_path, name="plasmid")
 
 

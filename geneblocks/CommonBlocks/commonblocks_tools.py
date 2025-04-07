@@ -7,6 +7,7 @@
 
 import re
 import tempfile
+import shutil
 import subprocess
 from collections import defaultdict, OrderedDict
 
@@ -130,6 +131,12 @@ def find_homologies_between_sequences(
                 ["> %s\n%s" % (name, seq.upper()) for name, seq in sequences.items()]
             )
         )
+
+    if shutil.which("blastn") is None:
+        raise Exception(
+            "Please install NCBI BLAST+ to use this function! On Ubuntu: `apt-get install ncbi-blast+`"
+        )
+
     proc = subprocess.Popen(
         [
             "blastn",

@@ -1,4 +1,5 @@
 from geneblocks.utils import sequences_are_circularly_equal
+from geneblocks.biotools import sequences_differences_array
 from Bio import SeqIO
 import os
 
@@ -31,3 +32,10 @@ def test_long_equivalents():
     path = os.path.join(this_directory, "sequences", "long_equivalents.fa")
     seq_a, seq_b = SeqIO.parse(path, "fasta")
     assert sequences_are_circularly_equal([seq_a, seq_b])
+
+
+def test_sequences_differences_array():
+    # The binary mode of numpy fromstring is removed
+    seq1 = "ATGCTA"
+    seq2 = "GCTAGC"
+    sequences_differences_array(seq1, seq2)

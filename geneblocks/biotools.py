@@ -137,7 +137,7 @@ def annotate_record(
 
 
 def sequences_differences_array(seq1, seq2):
-    """Return an array [0, 0, 1, 0, ...] with 1s for sequence differences.
+    """Return an boolean array [True, True, False, True, ...] with True for sequence differences.
 
     seq1, seq2 should both be ATGC strings.
     """
@@ -145,8 +145,11 @@ def sequences_differences_array(seq1, seq2):
         raise ValueError(
             "Only use on same-size sequences (%d, %d)" % (len(seq1), len(seq2))
         )
-    arr1 = np.fromstring(seq1, dtype="uint8")
-    arr2 = np.fromstring(seq2, dtype="uint8")
+    seq1_bytes = seq1.encode("utf-8")
+    seq2_bytes = seq2.encode("utf-8")
+    arr1 = np.frombuffer(seq1_bytes, dtype="uint8")
+    arr2 = np.frombuffer(seq2_bytes, dtype="uint8")
+
     return arr1 != arr2
 
 

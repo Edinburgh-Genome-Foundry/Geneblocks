@@ -1,6 +1,6 @@
 [project]
 name = "geneblocks"
-version = "1.2.4"
+version = "1.2.5"
 license = "MIT"
 authors = [{ name = "Zulko" }]
 description = "Library to compare DNA sequences (diff, common blocks, etc.)"
